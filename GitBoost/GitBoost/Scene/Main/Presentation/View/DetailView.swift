@@ -10,7 +10,6 @@ import SwiftUI
 struct DetailView: View {
     @State private var commitChallengeGoal: Int = 100
     @State private var commitChallengeProgress: Int = 50
-    @State private var selectedChallengeDays: Int = 30
     
     var progress: Double {
         return Double(commitChallengeProgress) / Double(commitChallengeGoal)
@@ -33,6 +32,7 @@ struct DetailView: View {
                 
                 Divider()
                     .padding(.horizontal, 40)
+                    .frame(height: 50)
                 
                 VStack(spacing: 10) {
                     Image(systemName: "calendar")
@@ -47,6 +47,7 @@ struct DetailView: View {
                 
                 Divider()
                     .padding(.horizontal, 40)
+                    .frame(height: 50)
                 
                 VStack(spacing: 10) {
                     Image(systemName: "flame.fill")
@@ -62,19 +63,18 @@ struct DetailView: View {
                 Spacer()
             }
         }
-        .padding(.vertical)
+        .padding(.top)
         
-        Section {
-            Text("GitHub Contributions View Placeholder")
-                .fontWeight(.medium)
-        }
+        Divider()
+        
+        GrassView()
         
         Divider()
         
         Section {
             HStack {
                 VStack(alignment: .leading, spacing: 14) {
-                    Text("\(selectedChallengeDays)일 커밋 챌린지 진행 중")
+                    Text("Commit Challenge")
                         .font(.title3)
                         .fontWeight(.semibold)
                     

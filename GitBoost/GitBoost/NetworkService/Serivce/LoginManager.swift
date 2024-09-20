@@ -9,7 +9,7 @@ import AuthenticationServices
 import SwiftUI
 
 // MARK: 첫 로그인 때만 사용해서 싱글톤 패턴으로 적용
-class LoginManager: NSObject, ObservableObject, ASWebAuthenticationPresentationContextProviding {
+final class LoginManager: NSObject, ObservableObject, ASWebAuthenticationPresentationContextProviding {
     
     static let shared = LoginManager()
     
@@ -67,6 +67,12 @@ class LoginManager: NSObject, ObservableObject, ASWebAuthenticationPresentationC
     }
 
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
-        return UIApplication.shared.windows.first!
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let window = windowScene.windows.first else {
+            
+            return UIWindow()
+        }
+        
+        return window
     }
 }
