@@ -26,6 +26,7 @@
 		635922A42C9CEF710006BB11 /* TextContents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6359228F2C9CEF710006BB11 /* TextContents.swift */; };
 		6383BE9E2C9CF81900EDE461 /* Contribution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6383BE9D2C9CF81900EDE461 /* Contribution.swift */; };
 		6383BEA12C9CF85800EDE461 /* GrassView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6383BEA02C9CF85800EDE461 /* GrassView.swift */; };
+		6383BEA42C9D9C1A00EDE461 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 6383BEA32C9D9C1A00EDE461 /* KeychainAccess */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -57,6 +58,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6383BEA42C9D9C1A00EDE461 /* KeychainAccess in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -283,6 +285,7 @@
 			);
 			name = GitBoost;
 			packageProductDependencies = (
+				6383BEA32C9D9C1A00EDE461 /* KeychainAccess */,
 			);
 			productName = GitBoost;
 			productReference = 6359222C2C9CEEB30006BB11 /* GitBoost.app */;
@@ -312,6 +315,9 @@
 			);
 			mainGroup = 635922232C9CEEB30006BB11;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				6383BEA22C9D9C1A00EDE461 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 6359222D2C9CEEB30006BB11 /* Products */;
 			projectDirPath = "";
@@ -569,6 +575,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		6383BEA22C9D9C1A00EDE461 /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kishikawakatsumi/KeychainAccess";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		6383BEA32C9D9C1A00EDE461 /* KeychainAccess */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6383BEA22C9D9C1A00EDE461 /* XCRemoteSwiftPackageReference "KeychainAccess" */;
+			productName = KeychainAccess;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 635922242C9CEEB30006BB11 /* Project object */;
 }
