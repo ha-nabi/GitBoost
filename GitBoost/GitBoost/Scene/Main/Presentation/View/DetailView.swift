@@ -8,12 +8,9 @@
 import SwiftUI
 
 struct DetailView: View {
-    @State private var commitChallengeGoal: Int = 100
-    @State private var commitChallengeProgress: Int = 50
-    
-    var progress: Double {
-        return Double(commitChallengeProgress) / Double(commitChallengeGoal)
-    }
+    var todayCommits: Int = 0
+    var thisWeekCommits: Int = 0
+    var consecutiveCommits: Int = 0
     
     var body: some View {
         Section {
@@ -23,7 +20,7 @@ struct DetailView: View {
                     Image(systemName: "checkmark.circle.fill")
                         .foregroundStyle(.green)
                         .font(.title2)
-                    Text("0개")
+                    Text("\(todayCommits)")
                         .fontWeight(.semibold)
                     Text("오늘")
                         .font(.footnote)
@@ -38,7 +35,7 @@ struct DetailView: View {
                     Image(systemName: "calendar")
                         .foregroundStyle(Color(.systemBlue))
                         .font(.title2)
-                    Text("4개")
+                    Text("\(thisWeekCommits)")
                         .fontWeight(.semibold)
                     Text("이번주")
                         .font(.footnote)
@@ -53,7 +50,7 @@ struct DetailView: View {
                     Image(systemName: "flame.fill")
                         .foregroundStyle(Color(.systemRed))
                         .font(.title2)
-                    Text("423일")
+                    Text("\(consecutiveCommits)")
                         .fontWeight(.semibold)
                     Text("연속")
                         .font(.footnote)
@@ -68,30 +65,6 @@ struct DetailView: View {
         Divider()
             .padding(.horizontal)
         
-//        Section {
-//            HStack {
-//                VStack(alignment: .leading, spacing: 14) {
-//                    Text("Commit Challenge")
-//                        .font(.title3)
-//                        .fontWeight(.semibold)
-//                    
-//                    Text("\(commitChallengeProgress)")
-//                        .font(.title)
-//                        .fontWeight(.medium)
-//                    +
-//                    Text("/\(commitChallengeGoal)")
-//                }
-//                .fontWeight(.medium)
-//                
-//                Spacer()
-//                
-//                // 커스텀 원형 진행률 뷰
-//                CircularProgressView(progress: progress)
-//                    .padding(.horizontal)
-//            }
-//            .padding(.horizontal)
-//        }
-//
         GrassView()
             .padding(.bottom, 50)
     }

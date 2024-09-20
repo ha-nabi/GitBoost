@@ -50,9 +50,23 @@ struct Home: View {
                     .padding(.top, -34)
                     .zIndex(1)
                     
-                    DetailView()
+                    if let contributionsData = contributionsData {
+                        DetailView(
+                            todayCommits: calculateTodayCommits(from: contributionsData),
+                            thisWeekCommits: calculateThisWeekCommits(from: contributionsData),
+                            consecutiveCommits: calculateConsecutiveCommits(from: contributionsData)
+                        )
                         .padding(.vertical)
                         .zIndex(0)
+                    } else {
+                        DetailView(
+                            todayCommits: 0,
+                            thisWeekCommits: 0,
+                            consecutiveCommits: 0
+                        )
+                        .padding(.vertical)
+                        .zIndex(0)
+                    }
                 }
             }
             .coordinateSpace(name: "SCROLL")
@@ -229,7 +243,7 @@ struct Home: View {
         print("로그아웃")
         LoginManager.shared.logout()
     }
-
+    
     func deleteAccount() {
         print("탈퇴하기")
         LoginManager.shared.deleteAccount()
@@ -249,40 +263,94 @@ struct Home: View {
                 }
             }
         }
-
+        
         // Fetch contributions data
         LoginManager.shared.fetchContributionsData { result in
             switch result {
-            case .success(let contributionsData):
+            case .success(let data):
                 DispatchQueue.main.async {
-                    self.contributionsData = contributionsData
+                    self.contributionsData = data
+                    print("Contributions data loaded successfully: \(data)")
                 }
             case .failure(let error):
                 DispatchQueue.main.async {
                     self.errorMessage = error.localizedDescription
+                    print("Failed to fetch contributions data: \(error.localizedDescription)")
                 }
             }
         }
     }
     
-    // 오늘 커밋 갯수 계산
-    func calculateTodayCommits(from data: ContributionsData) -> Int {
-        let today = DateFormatter().string(from: Date())
-        return data.data.viewer.contributionsCollection.weeks.flatMap { $0.contributionDays }
-            .first(where: { $0.date == today })?.contributionCount ?? 0
+    // 오늘 커밋 수를 계산하는 함수
+    func calculateTodayCommits(from contributionsData: ContributionsData) -> Int {
+        // 모든 주의 기여일(contributionDays)을 하나의 배열로 만듭니다
+        let contributionDays = contributionsData.data.viewer.contributionsCollection.contributionCalendar.weeks.flatMap { $0.contributionDays }
+        
+        // 마지막 날이 오늘인 경우 오늘의 커밋 수를 반환
+        if let todayContribution = contributionDays.last {
+            return todayContribution.contributionCount
+        }
+        
+        return 0
     }
 
-    // 이번 주 커밋 갯수 계산
-    func calculateThisWeekCommits(from data: ContributionsData) -> Int {
-        return data.data.viewer.contributionsCollection.weeks.flatMap { $0.contributionDays }
-            .reduce(0) { $0 + $1.contributionCount }
+    // 이번 주 커밋 수를 계산하는 함수
+    func calculateThisWeekCommits(from contributionsData: ContributionsData) -> Int {
+        // 최근 주의 기여 데이터를 가져옵니다
+        let currentWeek = contributionsData.data.viewer.contributionsCollection.contributionCalendar.weeks.last
+        
+        // 이번 주 모든 날의 커밋 수를 합산
+        let thisWeekCommits = currentWeek?.contributionDays.reduce(0, { $0 + $1.contributionCount }) ?? 0
+        
+        return thisWeekCommits
     }
 
-    // 연속 커밋 일수 계산
-    func calculateConsecutiveCommits(from data: ContributionsData) -> Int {
-        // Custom logic to calculate consecutive commit days
-        return 0 // Placeholder, implement your logic here
+    // 연속된 커밋 수를 계산하는 함수
+    func calculateConsecutiveCommits(from contributionsData: ContributionsData) -> Int {
+        let calendar = Calendar.current
+        var consecutiveCommits = 0
+        var previousDate: Date?
+        
+        // contributionDays를 역순으로 탐색
+        for week in contributionsData.data.viewer.contributionsCollection.contributionCalendar.weeks.reversed() {
+            for day in week.contributionDays.reversed() {
+                // 날짜를 Date 타입으로 변환
+                if let currentDate = dateFormatter.date(from: day.date) {
+                    // 만약 이전 날짜가 없다면, 즉 첫 번째 날짜이면 처리
+                    if previousDate == nil {
+                        if day.contributionCount > 0 {
+                            consecutiveCommits += 1
+                            previousDate = currentDate
+                        }
+                    } else {
+                        // 이전 날짜가 있다면, 그 날짜와 현재 날짜의 차이를 계산
+                        let difference = calendar.dateComponents([.day], from: currentDate, to: previousDate!).day
+                        if difference == 1 {
+                            if day.contributionCount > 0 {
+                                consecutiveCommits += 1
+                                previousDate = currentDate
+                            } else {
+                                // 커밋이 없는 날이 나오면 연속이 끊김
+                                return consecutiveCommits
+                            }
+                        } else {
+                            // 날짜가 연속되지 않으면 종료
+                            return consecutiveCommits
+                        }
+                    }
+                }
+            }
+        }
+        
+        return consecutiveCommits
     }
+
+    // 날짜 포맷터
+    let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter
+    }()
 }
 
 extension View {

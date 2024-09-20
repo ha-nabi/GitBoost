@@ -24,22 +24,23 @@ struct UserInfo: Codable {
     }
 }
 
-// Contributions 데이터
 struct ContributionsData: Codable {
-    let data: Viewer
+    let data: ViewerWrapper
+}
+
+struct ViewerWrapper: Codable {
+    let viewer: Viewer
 }
 
 struct Viewer: Codable {
-    let viewer: ContributionsCollection
+    let contributionsCollection: ContributionsCollection
 }
 
 struct ContributionsCollection: Codable {
-    let contributionsCollection: ContributionCalendar
+    let contributionCalendar: ContributionCalendar
 }
 
 struct ContributionCalendar: Codable {
-    let totalContributions: Int
-    let totalCommitContributions: Int
     let weeks: [Week]
 }
 

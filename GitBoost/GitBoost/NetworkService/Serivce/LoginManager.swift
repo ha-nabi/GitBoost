@@ -189,62 +189,64 @@ final class LoginManager: NSObject, ObservableObject, ASWebAuthenticationPresent
         }.resume()
     }
 
-      // GraphQL로 contributions 정보 가져오기
-      func fetchContributionsData(completion: @escaping (Result<ContributionsData, Error>) -> Void) {
-          guard let token = loadAccessTokenFromKeychain() else {
-              completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Access token not found"])))
-              return
-          }
+    // GraphQL로 contributions 정보 가져오기
+    func fetchContributionsData(completion: @escaping (Result<ContributionsData, Error>) -> Void) {
+        guard let token = loadAccessTokenFromKeychain() else {
+            completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Access token not found"])))
+            return
+        }
 
-          let url = URL(string: graphqlURL)!
-          var request = URLRequest(url: url)
-          request.httpMethod = "POST"
-          request.setValue("token \(token)", forHTTPHeaderField: "Authorization")
-          request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        let url = URL(string: graphqlURL)!
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("token \(token)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
-          // GraphQL Query
-          let query = """
-          {
+        // GraphQL Query
+        let query = """
+        {
             viewer {
-              contributionsCollection {
-                contributionCalendar {
-                  totalContributions
-                  weeks {
-                    contributionDays {
-                      date
-                      contributionCount
+                contributionsCollection {
+                    contributionCalendar {
+                        weeks {
+                            contributionDays {
+                                date
+                                contributionCount
+                            }
+                        }
                     }
-                  }
                 }
-                contributionCalendar {
-                  totalContributions
-                }
-                totalCommitContributions
-              }
             }
-          }
-          """
+        }
+        """
 
-          let body = ["query": query]
-          request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: [])
+        let body = ["query": query]
+        request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: [])
 
-          URLSession.shared.dataTask(with: request) { data, response, error in
-              if let error = error {
-                  completion(.failure(error))
-                  return
-              }
-              guard let data = data else {
-                  completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "No data received"])))
-                  return
-              }
-              do {
-                  let contributionsData = try JSONDecoder().decode(ContributionsData.self, from: data)
-                  completion(.success(contributionsData))
-              } catch {
-                  completion(.failure(error))
-              }
-          }.resume()
-      }
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+
+            if let data = data, let responseString = String(data: data, encoding: .utf8) {
+                print("GraphQL Response: \(responseString)")
+            }
+
+            guard let data = data else {
+                completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "No data received"])))
+                return
+            }
+
+            do {
+                let contributionsData = try JSONDecoder().decode(ContributionsData.self, from: data)
+                completion(.success(contributionsData))
+            } catch {
+                print("Error decoding contributions data: \(error)")
+                completion(.failure(error))
+            }
+        }.resume()
+    }
 
     // MARK: - Keychain 저장
     private func storeAccessTokenInKeychain(token: String) {
