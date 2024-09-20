@@ -8,13 +8,15 @@
 import SwiftUI
 
 struct IntroView: View {
-    @State private var activePage: Page = .page1
+    @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
+    
     @ObservedObject var loginManager = LoginManager.shared
-    @State private var showHome = false
+    
+    @State private var activePage: Page = .page1
 
     var body: some View {
         ZStack {
-            if loginManager.isLoggedIn {
+            if isLoggedIn {
                 ContentView()
             } else {
                 VStack {

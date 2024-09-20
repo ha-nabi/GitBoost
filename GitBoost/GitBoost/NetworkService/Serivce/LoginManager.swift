@@ -15,8 +15,12 @@ final class LoginManager: NSObject, ObservableObject, ASWebAuthenticationPresent
     
     private override init() { }
     
-    @Published var isLoggedIn: Bool = false
+    @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
+    
     private var accessToken: String?
+    
+    private let baseURL = "https://api.github.com"
+    private let graphqlURL = "https://api.github.com/graphql"
     
     // MARK: - 로그인
     func login() {
@@ -60,16 +64,33 @@ final class LoginManager: NSObject, ObservableObject, ASWebAuthenticationPresent
         request.setValue("application/json", forHTTPHeaderField: "Accept")
 
         URLSession.shared.dataTask(with: request) { data, response, error in
-            if let data = data, let tokenResponse = String(data: data, encoding: .utf8) {
-                print("Access Token Response: \(tokenResponse)")
-                
-                // 액세스 토큰 저장
-                self.accessToken = tokenResponse
-                self.storeAccessTokenInKeychain(token: tokenResponse)
-                
-                DispatchQueue.main.async {
-                    self.isLoggedIn = true  // 로그인 성공 시 상태 업데이트
+            if let error = error {
+                print("Error requesting access token: \(error)")
+                return
+            }
+            guard let data = data else {
+                print("No data received")
+                return
+            }
+
+            do {
+                // JSON으로 액세스 토큰을 디코드
+                let tokenResponse = try JSONDecoder().decode([String: String].self, from: data)
+                if let accessToken = tokenResponse["access_token"] {
+                    print("Access Token: \(accessToken)")
+                    
+                    // 액세스 토큰 저장
+                    self.accessToken = accessToken
+                    self.storeAccessTokenInKeychain(token: accessToken)
+                    
+                    DispatchQueue.main.async {
+                        self.isLoggedIn = true  // 로그인 성공 시 상태 업데이트
+                    }
+                } else {
+                    print("Access token not found in response")
                 }
+            } catch {
+                print("Error decoding access token: \(error)")
             }
         }.resume()
     }
@@ -129,6 +150,101 @@ final class LoginManager: NSObject, ObservableObject, ASWebAuthenticationPresent
             print("Successfully revoked token.")
         }.resume()
     }
+    
+    // GitHub에서 사용자 정보 가져오기
+    func fetchUserInfo(completion: @escaping (Result<UserInfo, Error>) -> Void) {
+        guard let token = loadAccessTokenFromKeychain() else {
+            completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Access token not found"])))
+            return
+        }
+
+        let url = URL(string: "\(baseURL)/user")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        
+        // Authorization 헤더 수정
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            guard let data = data else {
+                completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "No data received"])))
+                return
+            }
+
+            // 응답을 확인하기 위한 로그 출력
+            if let responseString = String(data: data, encoding: .utf8) {
+                print("GitHub API User Response: \(responseString)")
+            }
+
+            do {
+                let userInfo = try JSONDecoder().decode(UserInfo.self, from: data)
+                completion(.success(userInfo))
+            } catch {
+                completion(.failure(error))
+            }
+        }.resume()
+    }
+
+      // GraphQL로 contributions 정보 가져오기
+      func fetchContributionsData(completion: @escaping (Result<ContributionsData, Error>) -> Void) {
+          guard let token = loadAccessTokenFromKeychain() else {
+              completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Access token not found"])))
+              return
+          }
+
+          let url = URL(string: graphqlURL)!
+          var request = URLRequest(url: url)
+          request.httpMethod = "POST"
+          request.setValue("token \(token)", forHTTPHeaderField: "Authorization")
+          request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+          // GraphQL Query
+          let query = """
+          {
+            viewer {
+              contributionsCollection {
+                contributionCalendar {
+                  totalContributions
+                  weeks {
+                    contributionDays {
+                      date
+                      contributionCount
+                    }
+                  }
+                }
+                contributionCalendar {
+                  totalContributions
+                }
+                totalCommitContributions
+              }
+            }
+          }
+          """
+
+          let body = ["query": query]
+          request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: [])
+
+          URLSession.shared.dataTask(with: request) { data, response, error in
+              if let error = error {
+                  completion(.failure(error))
+                  return
+              }
+              guard let data = data else {
+                  completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "No data received"])))
+                  return
+              }
+              do {
+                  let contributionsData = try JSONDecoder().decode(ContributionsData.self, from: data)
+                  completion(.success(contributionsData))
+              } catch {
+                  completion(.failure(error))
+              }
+          }.resume()
+      }
 
     // MARK: - Keychain 저장
     private func storeAccessTokenInKeychain(token: String) {

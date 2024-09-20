@@ -66,34 +66,34 @@ struct DetailView: View {
         .padding(.top)
         
         Divider()
+            .padding(.horizontal)
         
+//        Section {
+//            HStack {
+//                VStack(alignment: .leading, spacing: 14) {
+//                    Text("Commit Challenge")
+//                        .font(.title3)
+//                        .fontWeight(.semibold)
+//                    
+//                    Text("\(commitChallengeProgress)")
+//                        .font(.title)
+//                        .fontWeight(.medium)
+//                    +
+//                    Text("/\(commitChallengeGoal)")
+//                }
+//                .fontWeight(.medium)
+//                
+//                Spacer()
+//                
+//                // 커스텀 원형 진행률 뷰
+//                CircularProgressView(progress: progress)
+//                    .padding(.horizontal)
+//            }
+//            .padding(.horizontal)
+//        }
+//
         GrassView()
-        
-        Divider()
-        
-        Section {
-            HStack {
-                VStack(alignment: .leading, spacing: 14) {
-                    Text("Commit Challenge")
-                        .font(.title3)
-                        .fontWeight(.semibold)
-                    
-                    Text("\(commitChallengeProgress)")
-                        .font(.title)
-                        .fontWeight(.medium)
-                    +
-                    Text("/\(commitChallengeGoal)")
-                }
-                .fontWeight(.medium)
-                
-                Spacer()
-                
-                // 커스텀 원형 진행률 뷰
-                CircularProgressView(progress: progress)
-                    .padding(.horizontal)
-            }
-            .padding([.horizontal, .bottom])
-        }
+            .padding(.bottom, 50)
     }
 }
 
