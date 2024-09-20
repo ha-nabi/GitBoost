@@ -70,7 +70,6 @@ struct GrassView: View {
     }
 
     // MARK: - Private
-
     private func weekday(for date: Date) -> Int {
         let weekday = Calendar.current.component(.weekday, from: date)
         let adjustedWeekday = (weekday == 1) ? 7 : (weekday - 1)

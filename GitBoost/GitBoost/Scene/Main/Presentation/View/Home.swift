@@ -8,11 +8,13 @@
 import SwiftUI
 
 struct Home: View {
-    // MARK: View Properties
     var safeArea: EdgeInsets
     var size: CGSize
     
-    @State var showAnotherSheet: Bool = false
+    @State private var scrollViewOffset: CGFloat = 0
+    
+    @State private var showLogoutDialog = false
+    @State private var showDeleteAccountDialog = false
     
     var body: some View {
         ZStack {
@@ -45,14 +47,77 @@ struct Home: View {
                         .padding(.vertical)
                         .zIndex(0)
                 }
-                .refreshable {
-                    
-                }
-                .overlay(alignment: .top) {
-                    HeaderView()
-                }
             }
             .coordinateSpace(name: "SCROLL")
+            .confirmationDialog(
+                "로그아웃",
+                isPresented: $showLogoutDialog,
+                titleVisibility: .visible,
+                actions: {
+                    Button("로그아웃", role: .destructive) {
+                        logout()
+                    }
+                },
+                message: {
+                    Text("현재 계정에서 로그아웃 하시겠어요?")
+                }
+            )
+            .confirmationDialog(
+                "탈퇴하기",
+                isPresented: $showDeleteAccountDialog,
+                titleVisibility: .visible,
+                actions: {
+                    Button("탈퇴하기", role: .destructive) {
+                        deleteAccount()
+                    }
+                },
+                message: {
+                    Text("현재 계정에서 로그아웃 하시겠어요?")
+                }
+            )
+        }
+        .navigationBarTitle(scrollViewOffset > 100 ? "" : "ha-nabi".uppercased(), displayMode: .inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Menu {
+                    Menu("계정 설정") {
+                        Button {
+                            showLogoutDialog = true
+                        } label: {
+                            Label {
+                                Text("로그아웃")
+                            } icon: {
+                                Image(systemName: "door.left.hand.open")
+                            }
+                            
+                        }
+                        
+                        Button {
+                            showDeleteAccountDialog = true
+                        } label: {
+                            Label {
+                                Text("탈퇴하기")
+                            } icon: {
+                                Image(systemName: "trash.slash.fill")
+                            }
+                        }
+                    }
+                    
+                    Button {
+                        
+                    } label: {
+                        Label {
+                            Text("피드백 제공")
+                        } icon: {
+                            Image(systemName: "exclamationmark.bubble.fill")
+                        }
+                    }
+                } label: {
+                    Image(systemName: "ellipsis.circle.fill")
+                        .font(.title3)
+                        .foregroundStyle(.white)
+                }
+            }
         }
     }
     
@@ -100,6 +165,9 @@ struct Home: View {
                                 .fontWeight(.bold)
                                 .foregroundColor(.gray)
                                 .padding(.top, 15)
+                                .onScrollViewOffsetChange { offset in
+                                    scrollViewOffset = offset
+                                }
                         }
                         .opacity(1 + (progress > 0 ? -progress : progress))
                         .padding(.bottom, 55)
@@ -111,45 +179,37 @@ struct Home: View {
         .frame(height: height + safeArea.top)
     }
     
-    // MARK: Header View
-    @ViewBuilder
-    func HeaderView() -> some View {
-        GeometryReader { proxy in
-            let minY = proxy.frame(in: .named("SCROLL")).minY
-            let height = size.height * 0.45
-            let progress = minY / (height * (minY > 0 ? 0.5 : 0.8))
-            let titleProgress = minY / height
-            
-            HStack(spacing: 15) {
-                Text("GitBoost")
-                    .font(.title2)
-                    .fontWeight(.semibold)
-                
-                Spacer(minLength: 0)
-                
-                Button {
-                    // More options action
-                } label: {
-                    Image(systemName: "ellipsis.circle.fill")
-                        .font(.title2)
-                        .foregroundColor(.white)
+    // Actions
+    func logout() {
+        print("로그아웃")
+        LoginManager.shared.logout()
+    }
+
+    func deleteAccount() {
+        print("탈퇴하기")
+        LoginManager.shared.deleteAccount()
+    }
+}
+
+extension View {
+    func onScrollViewOffsetChange(action:@escaping (_ offset: CGFloat) -> ()) -> some View {
+        self
+            .background(
+                GeometryReader { geometry in
+                    Text("")
+                        .preference(key: ScrollViewOffsetPreferenceKey.self, value: geometry.frame(in: .global).minY)
                 }
+            )
+            .onPreferenceChange(ScrollViewOffsetPreferenceKey.self) { value in
+                action(value)
             }
-            .overlay {
-                Text("ha-nabi".uppercased())
-                    .fontWeight(.semibold)
-                    .offset(y: -titleProgress > 0.75 ? 0 : 45)
-                    .animation(.easeInOut(duration: 0.25), value: -titleProgress > 0.75)
-            }
-            .padding(.top, safeArea.top + 10)
-            .clipped()
-            .padding([.horizontal, .bottom], 15)
-            .background {
-                Color.black.opacity(-progress > 1 ? 1 : 0)
-            }
-            .offset(y: -minY)
-        }
-        .frame(height: 35)
+    }
+}
+
+struct ScrollViewOffsetPreferenceKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
     }
 }
 

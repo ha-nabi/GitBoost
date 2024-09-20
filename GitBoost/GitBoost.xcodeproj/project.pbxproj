@@ -307,11 +307,12 @@
 				};
 			};
 			buildConfigurationList = 635922272C9CEEB30006BB11 /* Build configuration list for PBXProject "GitBoost" */;
-			developmentRegion = en;
+			developmentRegion = ko;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
+				ko,
 			);
 			mainGroup = 635922232C9CEEB30006BB11;
 			minimizedProjectReferenceProxies = 1;

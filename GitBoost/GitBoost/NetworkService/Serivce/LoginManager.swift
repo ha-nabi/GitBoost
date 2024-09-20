@@ -7,7 +7,6 @@
 
 import AuthenticationServices
 import KeychainAccess
-
 import SwiftUI
 
 final class LoginManager: NSObject, ObservableObject, ASWebAuthenticationPresentationContextProviding {
@@ -88,9 +87,20 @@ final class LoginManager: NSObject, ObservableObject, ASWebAuthenticationPresent
     
     // MARK: - 탈퇴하기 (계정 해제)
     func deleteAccount() {
-        revokeAccessToken() // GitHub에서 액세스 토큰 해제
-        removeAllUserData() // 앱 데이터 삭제
-        removeAccessTokenFromKeychain() // Keychain에서 토큰 삭제
+        // GitHub에서 액세스 토큰 해제
+        revokeAccessToken()
+
+        // 앱 데이터 삭제
+        removeAllUserData()
+
+        // Keychain에서 토큰 삭제
+        removeAccessTokenFromKeychain()
+
+        // 로그인 상태를 초기화하여 로그인 화면으로 돌아가도록 설정
+        DispatchQueue.main.async {
+            self.isLoggedIn = false
+        }
+
         print("Account deleted and all user data removed")
     }
     
@@ -144,6 +154,7 @@ final class LoginManager: NSObject, ObservableObject, ASWebAuthenticationPresent
         UserDefaults.standard.synchronize()
     }
 
+    // MARK: - UI Presentation
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
         guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
               let window = windowScene.windows.first else {

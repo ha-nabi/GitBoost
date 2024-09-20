@@ -92,7 +92,7 @@ struct DetailView: View {
                 CircularProgressView(progress: progress)
                     .padding(.horizontal)
             }
-            .padding(.horizontal)
+            .padding([.horizontal, .bottom])
         }
     }
 }
