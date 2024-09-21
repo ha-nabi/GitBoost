@@ -85,6 +85,9 @@ struct GrassView: View {
         .onAppear {
             fetchAndApplyContributionsData()
         }
+        .refreshable {
+            fetchAndApplyContributionsData()
+        }
     }
 
     // MARK: - Private

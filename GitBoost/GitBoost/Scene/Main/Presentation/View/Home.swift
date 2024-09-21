@@ -70,7 +70,7 @@ struct Home: View {
                 }
             }
             .refreshable {
-                
+                fetchGitHubData()
             }
             .coordinateSpace(name: "SCROLL")
             .confirmationDialog(
@@ -164,8 +164,13 @@ struct Home: View {
             let progress = minY / (height * (minY > 0 ? 0.5 : 0.8))
             
             if let userInfo = userInfo {
-                KFImage(URL(string: userInfo.avatar_url))
+                // URL에 타임스탬프를 추가하여 캐시 무효화
+                let profileImageURL = "\(userInfo.avatar_url)?timestamp=\(Date().timeIntervalSince1970)"
+                
+                KFImage(URL(string: profileImageURL))
                     .resizable()
+                    .cacheOriginalImage(false) // 캐시된 이미지 사용x
+                    .forceRefresh() // 강제 새로고침
                     .aspectRatio(contentMode: .fill)
                     .frame(width: size.width, height: size.height + (minY > 0 ? minY : 0))
                     .clipped()
