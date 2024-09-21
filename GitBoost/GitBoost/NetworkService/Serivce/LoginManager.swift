@@ -106,7 +106,7 @@ final class LoginManager: NSObject, ObservableObject, ASWebAuthenticationPresent
         }
     }
     
-    // MARK: - 탈퇴하기 (계정 해제)
+    // MARK: - 탈퇴하기
     func deleteAccount() {
         // GitHub에서 액세스 토큰 해제
         revokeAccessToken()
@@ -120,6 +120,7 @@ final class LoginManager: NSObject, ObservableObject, ASWebAuthenticationPresent
         // 로그인 상태를 초기화하여 로그인 화면으로 돌아가도록 설정
         DispatchQueue.main.async {
             self.isLoggedIn = false
+            self.accessToken = nil
         }
 
         print("Account deleted and all user data removed")
@@ -162,7 +163,6 @@ final class LoginManager: NSObject, ObservableObject, ASWebAuthenticationPresent
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         
-        // Authorization 헤더 수정
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
 
         URLSession.shared.dataTask(with: request) { data, response, error in
@@ -173,11 +173,6 @@ final class LoginManager: NSObject, ObservableObject, ASWebAuthenticationPresent
             guard let data = data else {
                 completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "No data received"])))
                 return
-            }
-
-            // 응답을 확인하기 위한 로그 출력
-            if let responseString = String(data: data, encoding: .utf8) {
-                print("GitHub API User Response: \(responseString)")
             }
 
             do {
@@ -227,10 +222,6 @@ final class LoginManager: NSObject, ObservableObject, ASWebAuthenticationPresent
             if let error = error {
                 completion(.failure(error))
                 return
-            }
-
-            if let data = data, let responseString = String(data: data, encoding: .utf8) {
-                print("GraphQL Response: \(responseString)")
             }
 
             guard let data = data else {

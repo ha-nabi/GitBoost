@@ -69,6 +69,9 @@ struct Home: View {
                     }
                 }
             }
+            .refreshable {
+                
+            }
             .coordinateSpace(name: "SCROLL")
             .confirmationDialog(
                 "로그아웃",
@@ -250,7 +253,6 @@ struct Home: View {
     }
     
     func fetchGitHubData() {
-        // Fetch user info
         LoginManager.shared.fetchUserInfo { result in
             switch result {
             case .success(let userInfo):
@@ -264,13 +266,11 @@ struct Home: View {
             }
         }
         
-        // Fetch contributions data
         LoginManager.shared.fetchContributionsData { result in
             switch result {
             case .success(let data):
                 DispatchQueue.main.async {
                     self.contributionsData = data
-                    print("Contributions data loaded successfully: \(data)")
                 }
             case .failure(let error):
                 DispatchQueue.main.async {
@@ -281,9 +281,9 @@ struct Home: View {
         }
     }
     
-    // 오늘 커밋 수를 계산하는 함수
+    // 오늘 커밋 수
     func calculateTodayCommits(from contributionsData: ContributionsData) -> Int {
-        // 모든 주의 기여일(contributionDays)을 하나의 배열로 만듭니다
+        // 모든 주의 기여일을 하나의 배열로 만듬
         let contributionDays = contributionsData.data.viewer.contributionsCollection.contributionCalendar.weeks.flatMap { $0.contributionDays }
         
         // 마지막 날이 오늘인 경우 오늘의 커밋 수를 반환
@@ -294,9 +294,9 @@ struct Home: View {
         return 0
     }
 
-    // 이번 주 커밋 수를 계산하는 함수
+    // 이번 주 커밋 수
     func calculateThisWeekCommits(from contributionsData: ContributionsData) -> Int {
-        // 최근 주의 기여 데이터를 가져옵니다
+        // 최근 주의 기여 데이터를 가져옴
         let currentWeek = contributionsData.data.viewer.contributionsCollection.contributionCalendar.weeks.last
         
         // 이번 주 모든 날의 커밋 수를 합산
@@ -305,7 +305,7 @@ struct Home: View {
         return thisWeekCommits
     }
 
-    // 연속된 커밋 수를 계산하는 함수
+    // 연속된 커밋 날짜
     func calculateConsecutiveCommits(from contributionsData: ContributionsData) -> Int {
         let calendar = Calendar.current
         var consecutiveCommits = 0
