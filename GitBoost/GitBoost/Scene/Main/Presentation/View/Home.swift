@@ -9,19 +9,11 @@ import Kingfisher
 import SwiftUI
 
 struct Home: View {
+    @StateObject private var mainViewModel = MainViewModel()
+    @StateObject private var grassViewModel = GlassViewModel()
+    
     var safeArea: EdgeInsets
     var size: CGSize
-    
-    @State private var scrollViewOffset: CGFloat = 0
-    
-    @State private var showLogoutDialog = false
-    @State private var showDeleteAccountDialog = false
-    
-    @State private var userInfo: UserInfo?
-    @State private var contributionsData: ContributionsData?
-    @State private var followers: [UserInfo] = []
-    @State private var following: [UserInfo] = []
-    @State private var errorMessage: String?
     
     var body: some View {
         ZStack {
@@ -50,36 +42,35 @@ struct Home: View {
                     .padding(.top, -34)
                     .zIndex(1)
                     
-                    if let contributionsData = contributionsData {
-                        DetailView(
-                            todayCommits: calculateTodayCommits(from: contributionsData),
-                            thisWeekCommits: calculateThisWeekCommits(from: contributionsData),
-                            consecutiveCommits: calculateConsecutiveCommits(from: contributionsData)
-                        )
-                        .padding(.vertical, 10)
-                        .zIndex(0)
-                    } else {
-                        DetailView(
-                            todayCommits: 0,
-                            thisWeekCommits: 0,
-                            consecutiveCommits: 0
+                    if let contributionsData = mainViewModel.contributionsData {
+                        StatsView(
+                            todayCommits: mainViewModel.calculateTodayCommits(from: contributionsData),
+                            thisWeekCommits: mainViewModel.calculateThisWeekCommits(from: contributionsData),
+                            consecutiveCommits: mainViewModel.calculateConsecutiveCommits(from: contributionsData)
                         )
                         .padding(.vertical, 10)
                         .zIndex(0)
                     }
+                    
+                    Divider()
+                        .padding(10)
+                    
+                    GrassView(viewModel: grassViewModel)
+                        .padding(.top, 10)
                 }
             }
             .refreshable {
-                fetchGitHubData()
+                mainViewModel.fetchGitHubData()
+                grassViewModel.fetchContributionsData()
             }
             .coordinateSpace(name: "SCROLL")
             .confirmationDialog(
                 "로그아웃",
-                isPresented: $showLogoutDialog,
+                isPresented: $mainViewModel.showLogoutDialog,
                 titleVisibility: .visible,
                 actions: {
                     Button("로그아웃", role: .destructive) {
-                        logout()
+                        mainViewModel.logout()
                     }
                 },
                 message: {
@@ -88,11 +79,11 @@ struct Home: View {
             )
             .confirmationDialog(
                 "탈퇴하기",
-                isPresented: $showDeleteAccountDialog,
+                isPresented: $mainViewModel.showDeleteAccountDialog,
                 titleVisibility: .visible,
                 actions: {
                     Button("탈퇴하기", role: .destructive) {
-                        deleteAccount()
+                        mainViewModel.deleteAccount()
                     }
                 },
                 message: {
@@ -100,10 +91,10 @@ struct Home: View {
                 }
             )
             .onAppear {
-                fetchGitHubData()
+                mainViewModel.fetchGitHubData()
             }
         }
-        .navigationBarTitle(scrollViewOffset > 100 ? "" : (userInfo?.login.uppercased() ?? ""), displayMode: .inline)
+        .navigationBarTitle(mainViewModel.scrollViewOffset > 100 ? "" : (mainViewModel.userInfo?.login.uppercased() ?? ""), displayMode: .inline)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 Text("GitBoost")
@@ -114,7 +105,7 @@ struct Home: View {
                 Menu {
                     Menu("계정 설정") {
                         Button {
-                            showLogoutDialog = true
+                            mainViewModel.showLogoutDialog = true
                         } label: {
                             Label {
                                 Text("로그아웃")
@@ -125,7 +116,7 @@ struct Home: View {
                         }
                         
                         Button {
-                            showDeleteAccountDialog = true
+                            mainViewModel.showDeleteAccountDialog = true
                         } label: {
                             Label {
                                 Text("탈퇴하기")
@@ -163,11 +154,8 @@ struct Home: View {
             let minY = proxy.frame(in: .named("SCROLL")).minY
             let progress = minY / (height * (minY > 0 ? 0.5 : 0.8))
             
-            if let userInfo = userInfo {
-                // URL에 타임스탬프를 추가하여 캐시 무효화
-                let profileImageURL = "\(userInfo.avatar_url)?timestamp=\(Date().timeIntervalSince1970)"
-                
-                KFImage(URL(string: profileImageURL))
+            if let userInfo = mainViewModel.userInfo {
+                KFImage(URL(string: userInfo.avatar_url))
                     .resizable()
                     .cacheOriginalImage(false) // 캐시된 이미지 사용x
                     .forceRefresh() // 강제 새로고침
@@ -204,7 +192,7 @@ struct Home: View {
                                     .foregroundColor(.gray)
                                     .padding(.top, 4)
                                     .onScrollViewOffsetChange { offset in
-                                        scrollViewOffset = offset
+                                        mainViewModel.scrollViewOffset = offset
                                     }
                                 
                                 // 팔로워 및 팔로잉 수 표시
@@ -245,117 +233,6 @@ struct Home: View {
         }
         .frame(height: height + safeArea.top)
     }
-    
-    // Actions
-    func logout() {
-        print("로그아웃")
-        LoginManager.shared.logout()
-    }
-    
-    func deleteAccount() {
-        print("탈퇴하기")
-        LoginManager.shared.deleteAccount()
-    }
-    
-    func fetchGitHubData() {
-        LoginManager.shared.fetchUserInfo { result in
-            switch result {
-            case .success(let userInfo):
-                DispatchQueue.main.async {
-                    self.userInfo = userInfo
-                }
-            case .failure(let error):
-                DispatchQueue.main.async {
-                    self.errorMessage = error.localizedDescription
-                }
-            }
-        }
-        
-        LoginManager.shared.fetchContributionsData { result in
-            switch result {
-            case .success(let data):
-                DispatchQueue.main.async {
-                    self.contributionsData = data
-                }
-            case .failure(let error):
-                DispatchQueue.main.async {
-                    self.errorMessage = error.localizedDescription
-                    print("Failed to fetch contributions data: \(error.localizedDescription)")
-                }
-            }
-        }
-    }
-    
-    // 오늘 커밋 수
-    func calculateTodayCommits(from contributionsData: ContributionsData) -> Int {
-        // 모든 주의 기여일을 하나의 배열로 만듬
-        let contributionDays = contributionsData.data.viewer.contributionsCollection.contributionCalendar.weeks.flatMap { $0.contributionDays }
-        
-        // 마지막 날이 오늘인 경우 오늘의 커밋 수를 반환
-        if let todayContribution = contributionDays.last {
-            return todayContribution.contributionCount
-        }
-        
-        return 0
-    }
-
-    // 이번 주 커밋 수
-    func calculateThisWeekCommits(from contributionsData: ContributionsData) -> Int {
-        // 최근 주의 기여 데이터를 가져옴
-        let currentWeek = contributionsData.data.viewer.contributionsCollection.contributionCalendar.weeks.last
-        
-        // 이번 주 모든 날의 커밋 수를 합산
-        let thisWeekCommits = currentWeek?.contributionDays.reduce(0, { $0 + $1.contributionCount }) ?? 0
-        
-        return thisWeekCommits
-    }
-
-    // 연속된 커밋 날짜
-    func calculateConsecutiveCommits(from contributionsData: ContributionsData) -> Int {
-        let calendar = Calendar.current
-        var consecutiveCommits = 0
-        var previousDate: Date?
-        
-        // contributionDays를 역순으로 탐색
-        for week in contributionsData.data.viewer.contributionsCollection.contributionCalendar.weeks.reversed() {
-            for day in week.contributionDays.reversed() {
-                // 날짜를 Date 타입으로 변환
-                if let currentDate = dateFormatter.date(from: day.date) {
-                    // 만약 이전 날짜가 없다면, 즉 첫 번째 날짜이면 처리
-                    if previousDate == nil {
-                        if day.contributionCount > 0 {
-                            consecutiveCommits += 1
-                            previousDate = currentDate
-                        }
-                    } else {
-                        // 이전 날짜가 있다면, 그 날짜와 현재 날짜의 차이를 계산
-                        let difference = calendar.dateComponents([.day], from: currentDate, to: previousDate!).day
-                        if difference == 1 {
-                            if day.contributionCount > 0 {
-                                consecutiveCommits += 1
-                                previousDate = currentDate
-                            } else {
-                                // 커밋이 없는 날이 나오면 연속이 끊김
-                                return consecutiveCommits
-                            }
-                        } else {
-                            // 날짜가 연속되지 않으면 종료
-                            return consecutiveCommits
-                        }
-                    }
-                }
-            }
-        }
-        
-        return consecutiveCommits
-    }
-
-    // 날짜 포맷터
-    let dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        return formatter
-    }()
 }
 
 extension View {
@@ -378,8 +255,4 @@ struct ScrollViewOffsetPreferenceKey: PreferenceKey {
     static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
         value = nextValue()
     }
-}
-
-#Preview {
-    ContentView()
 }

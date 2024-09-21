@@ -9,17 +9,15 @@ import SwiftUI
 import Charts
 
 struct GrassView: View {
-    @State var contributions: [Contribution] = []
-    @State var totalContributionsLastYear: Int = 0
-    @State var isLoading = true
+    @ObservedObject var viewModel: GlassViewModel
 
     var body: some View {
         VStack(alignment: .leading) {
-            if isLoading {
+            if viewModel.isLoading {
                 ProgressView("Loading contributions...")
                     .padding()
             } else {
-                Text("\(totalContributionsLastYear) ")
+                Text("\(viewModel.totalContributionsLastYear) ")
                     .font(.title3)
                     .fontWeight(.semibold)
                 +
@@ -27,7 +25,7 @@ struct GrassView: View {
                     .font(.body)
                     .fontWeight(.medium)
                 
-                Chart(contributions) { contribution in
+                Chart(viewModel.contributions) { contribution in
                     RectangleMark(
                         xStart: .value("Start week", contribution.date, unit: .weekOfYear),
                         xEnd: .value("End week", contribution.date, unit: .weekOfYear),
@@ -83,65 +81,11 @@ struct GrassView: View {
         }
         .padding(.horizontal, 10)
         .onAppear {
-            fetchAndApplyContributionsData()
-        }
-        .refreshable {
-            fetchAndApplyContributionsData()
+            viewModel.fetchContributionsData()
         }
     }
 
-    // MARK: - Private
-    private func fetchAndApplyContributionsData() {
-        isLoading = true
-        LoginManager.shared.fetchContributionsData { result in
-            switch result {
-            case .success(let contributionsData):
-                let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "yyyy-MM-dd"
-
-                // 오늘 날짜 기준으로 1년 전의 날짜 계산
-                let today = Date()
-                guard let oneYearAgo = Calendar.current.date(byAdding: .year, value: -1, to: today) else {
-                    return
-                }
-
-                // 받은 데이터를 Contribution으로 변환하고 1년 전 이후 데이터만 필터링
-                let allContributions = contributionsData.data.viewer.contributionsCollection.contributionCalendar.weeks
-                    .flatMap { $0.contributionDays }
-                    .compactMap { contributionDay -> Contribution? in
-                        guard let date = dateFormatter.date(from: contributionDay.date), date >= oneYearAgo else {
-                            return nil
-                        }
-                        return Contribution(date: date, count: contributionDay.contributionCount)
-                    }
-
-                // 최근 1년 동안의 총 커밋 수 계산
-                let totalContributions = allContributions.reduce(0) { $0 + $1.count }
-                DispatchQueue.main.async {
-                    self.totalContributionsLastYear = totalContributions // 최근 1년 동안의 총 커밋 수 저장
-                }
-
-                // 최근 5개월의 데이터 필터링
-                guard let fiveMonthsAgo = Calendar.current.date(byAdding: .month, value: -5, to: today) else {
-                    return
-                }
-
-                let recentContributions = allContributions.filter { $0.date >= fiveMonthsAgo }
-
-                DispatchQueue.main.async {
-                    self.contributions = recentContributions
-                    self.isLoading = false
-                }
-
-            case .failure(let error):
-                print("Error fetching contributions data: \(error)")
-                DispatchQueue.main.async {
-                    self.isLoading = false
-                }
-            }
-        }
-    }
-
+    // MARK: - 차트 관련
     private func weekday(for date: Date) -> Int {
         let calendar = Calendar(identifier: .iso8601)
         let weekday = calendar.component(.weekday, from: date)
@@ -149,11 +93,11 @@ struct GrassView: View {
     }
 
     private var aspectRatio: Double {
-        if contributions.isEmpty {
+        if viewModel.contributions.isEmpty {
             return 1
         }
-        let firstDate = contributions.first!.date
-        let lastDate = contributions.last!.date
+        let firstDate = viewModel.contributions.first!.date
+        let lastDate = viewModel.contributions.last!.date
         let firstWeek = Calendar.current.component(.weekOfYear, from: firstDate)
         let lastWeek = Calendar.current.component(.weekOfYear, from: lastDate)
         return Double(lastWeek - firstWeek + 1) / 7

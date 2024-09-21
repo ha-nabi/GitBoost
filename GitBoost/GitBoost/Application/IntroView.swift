@@ -2,7 +2,7 @@
 //  IntroView.swift
 //  GitBoost
 //
-//  Created by 강치우 on 9/20/24.
+//  Created by 강치우 on 9/22/24.
 //
 
 import SwiftUI
