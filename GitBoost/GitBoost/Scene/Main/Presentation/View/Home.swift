@@ -56,7 +56,7 @@ struct Home: View {
                             thisWeekCommits: calculateThisWeekCommits(from: contributionsData),
                             consecutiveCommits: calculateConsecutiveCommits(from: contributionsData)
                         )
-                        .padding(.vertical)
+                        .padding(.vertical, 10)
                         .zIndex(0)
                     } else {
                         DetailView(
@@ -64,7 +64,7 @@ struct Home: View {
                             thisWeekCommits: 0,
                             consecutiveCommits: 0
                         )
-                        .padding(.vertical)
+                        .padding(.vertical, 10)
                         .zIndex(0)
                     }
                 }
@@ -156,7 +156,7 @@ struct Home: View {
     // MARK: Artwork View
     @ViewBuilder
     func ArtWork() -> some View {
-        let height = size.height * 0.8
+        let height = size.height * 0.4
         
         GeometryReader { proxy in
             let size = proxy.size

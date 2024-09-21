@@ -24,6 +24,7 @@ struct DetailView: View {
                         .fontWeight(.semibold)
                     Text("오늘")
                         .font(.footnote)
+                        .fontWeight(.medium)
                         .foregroundStyle(Color(.systemGray))
                 }
                 
@@ -39,6 +40,7 @@ struct DetailView: View {
                         .fontWeight(.semibold)
                     Text("이번주")
                         .font(.footnote)
+                        .fontWeight(.medium)
                         .foregroundStyle(Color(.systemGray))
                 }
                 
@@ -54,19 +56,18 @@ struct DetailView: View {
                         .fontWeight(.semibold)
                     Text("연속")
                         .font(.footnote)
+                        .fontWeight(.medium)
                         .foregroundStyle(Color(.systemGray))
                 }
                 
                 Spacer()
             }
         }
-        .padding(.top)
         
         Divider()
-            .padding(.horizontal)
+            .padding(.horizontal, 10)
         
         GrassView()
-            .padding(.bottom, 50)
     }
 }
 
