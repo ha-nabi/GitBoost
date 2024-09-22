@@ -27,7 +27,7 @@ struct GitHubScoreView: View {
                         .foregroundColor(score >= 100 ? .green : .red)
                     +
                     Text(" Score")
-                        .font(.system(size: 40))
+                        .font(.system(size: 30))
                         .fontWeight(.bold)
                 }
                 .listRowBackground(Color.clear)

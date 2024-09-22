@@ -116,6 +116,32 @@ struct Home: View {
             }
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
+                    Menu("정보") {
+                        NavigationLink {
+                            WebView(url: URL(string: "https://kangciu.notion.site/GitBoost-109518c03e1e80c8b620e34b8cc13676?pvs=4")!)
+                                .navigationTitle("개인정보 처리 방침")
+                                .toolbarTitleDisplayMode(.inline)
+                        } label: {
+                            Label {
+                                Text("개인정보 처리 방침")
+                            } icon: {
+                                Image(systemName: "doc.text.fill")
+                            }
+                        }
+                        
+                        NavigationLink {
+                            WebView(url: URL(string: "https://kangciu.notion.site/GitBoost-39134425b4e8453bab23d0801a1e3415?pvs=4")!)
+                                .navigationTitle("이용 약관")
+                                .toolbarTitleDisplayMode(.inline)
+                        } label: {
+                            Label {
+                                Text("이용 약관")
+                            } icon: {
+                                Image(systemName: "doc.text.magnifyingglass")
+                            }
+                        }
+                    }
+                    
                     Menu("계정 설정") {
                         Button {
                             mainViewModel.showLogoutDialog = true
@@ -138,6 +164,8 @@ struct Home: View {
                             }
                         }
                     }
+                    
+                    Divider()
                     
                     Button {
                         mainViewModel.isShowingMailComposer = true

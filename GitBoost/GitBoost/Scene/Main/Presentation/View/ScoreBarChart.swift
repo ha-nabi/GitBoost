@@ -31,7 +31,7 @@ struct ScoreBarChart: View {
                 animatedValues = Array(repeating: 0.0, count: data.count)
                 
                 DispatchQueue.main.async {
-                    withAnimation(.easeInOut(duration: 1.5)) {
+                    withAnimation(.easeInOut(duration: 1.0)) {
                         for (index, dataPoint) in data.enumerated() {
                             animatedValues[index] = Double(dataPoint.value)
                         }
@@ -47,7 +47,7 @@ struct ScoreBarChart: View {
     }
 }
 
-// 안전하게 배열 인덱스 접근하기 위한 확장
+// 안전하게 배열 인덱스 접근하기 위한 익스텐션
 extension Array {
     subscript(safe index: Index) -> Element? {
         return indices.contains(index) ? self[index] : nil

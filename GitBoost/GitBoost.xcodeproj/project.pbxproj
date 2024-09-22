@@ -38,6 +38,7 @@
 		63DF98CC2CA0514200B1CCE2 /* ScoreBarChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DF98CB2CA0514200B1CCE2 /* ScoreBarChart.swift */; };
 		63DF98CE2CA0515C00B1CCE2 /* ChartData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DF98CD2CA0515C00B1CCE2 /* ChartData.swift */; };
 		63DF98D12CA0691900B1CCE2 /* MailComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DF98D02CA0691900B1CCE2 /* MailComposer.swift */; };
+		63DF98D42CA0846900B1CCE2 /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DF98D32CA0846900B1CCE2 /* WebView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -71,6 +72,7 @@
 		63DF98CB2CA0514200B1CCE2 /* ScoreBarChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreBarChart.swift; sourceTree = "<group>"; };
 		63DF98CD2CA0515C00B1CCE2 /* ChartData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartData.swift; sourceTree = "<group>"; };
 		63DF98D02CA0691900B1CCE2 /* MailComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailComposer.swift; sourceTree = "<group>"; };
+		63DF98D32CA0846900B1CCE2 /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,6 +126,7 @@
 		635922772C9CEF710006BB11 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				63DF98D22CA0845A00B1CCE2 /* Component */,
 				635922762C9CEF710006BB11 /* Reusable */,
 			);
 			path = Common;
@@ -331,6 +334,14 @@
 			path = Component;
 			sourceTree = "<group>";
 		};
+		63DF98D22CA0845A00B1CCE2 /* Component */ = {
+			isa = PBXGroup;
+			children = (
+				63DF98D32CA0846900B1CCE2 /* WebView.swift */,
+			);
+			path = Component;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -429,6 +440,7 @@
 				63DF98D12CA0691900B1CCE2 /* MailComposer.swift in Sources */,
 				6359229E2C9CEF710006BB11 /* Page.swift in Sources */,
 				6359229F2C9CEF710006BB11 /* ContinueButton.swift in Sources */,
+				63DF98D42CA0846900B1CCE2 /* WebView.swift in Sources */,
 				63DF98C32CA03A7300B1CCE2 /* GitHubScoreView.swift in Sources */,
 				635922A02C9CEF710006BB11 /* HeaderView.swift in Sources */,
 				63DF98BB2C9F49FB00B1CCE2 /* MainViewModel.swift in Sources */,
