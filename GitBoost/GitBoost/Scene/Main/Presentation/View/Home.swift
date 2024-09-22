@@ -6,6 +6,7 @@
 //
 
 import Kingfisher
+import MessageUI
 import SwiftUI
 
 struct Home: View {
@@ -23,7 +24,7 @@ struct Home: View {
                     
                     GeometryReader { proxy in
                         Button {
-                            
+                            mainViewModel.showScoreSheet = true
                         } label: {
                             Text("깃허브 점수 확인")
                                 .font(.callout)
@@ -37,6 +38,18 @@ struct Home: View {
                                 }
                         }
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .sheet(isPresented: $mainViewModel.showScoreSheet) {
+                            GitHubScoreView(
+                                score: $mainViewModel.githubScore,
+                                totalCommitsScore: mainViewModel.totalCommitsScore,
+                                starsScore: mainViewModel.starsScore,
+                                prsScore: mainViewModel.prsScore,
+                                contributedRepoScore: mainViewModel.contributedRepoScore,
+                                consecutiveCommitsScore: mainViewModel.consecutiveCommitsScore
+                            )
+                        }
+                        .presentationDetents([ .medium, .large])
+                        .presentationBackground(.thinMaterial)
                     }
                     .frame(height: 50)
                     .padding(.top, -34)
@@ -127,7 +140,7 @@ struct Home: View {
                     }
                     
                     Button {
-                        
+                        mainViewModel.isShowingMailComposer = true
                     } label: {
                         Label {
                             Text("피드백 제공")
@@ -135,10 +148,19 @@ struct Home: View {
                             Image(systemName: "exclamationmark.bubble.fill")
                         }
                     }
+                    .disabled(!MFMailComposeViewController.canSendMail())
                 } label: {
                     Image(systemName: "ellipsis.circle.fill")
                         .font(.title3)
                         .foregroundStyle(.white)
+                }
+                .sheet(isPresented: $mainViewModel.isShowingMailComposer) {
+                    MailComposer(
+                        result: $mainViewModel.mailResult,
+                        recipientEmail: "a2849535@gmail.com",
+                        subject: "GitBoost 피드백 문의",
+                        body: "GitBoost에 대한 피드백을 남겨주세요."
+                    )
                 }
             }
         }
@@ -147,7 +169,7 @@ struct Home: View {
     // MARK: Artwork View
     @ViewBuilder
     func ArtWork() -> some View {
-        let height = size.height * 0.4
+        let height = size.height * 0.45
         
         GeometryReader { proxy in
             let size = proxy.size

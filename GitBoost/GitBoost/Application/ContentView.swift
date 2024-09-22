@@ -18,6 +18,7 @@ struct ContentView: View {
                     .ignoresSafeArea(.container, edges: .top)
             }
         }
+        .tint(.white)
     }
 }
 

@@ -23,32 +23,3 @@ struct UserInfo: Codable {
         case following
     }
 }
-
-struct ContributionsData: Codable {
-    let data: ViewerWrapper
-}
-
-struct ViewerWrapper: Codable {
-    let viewer: Viewer
-}
-
-struct Viewer: Codable {
-    let contributionsCollection: ContributionsCollection
-}
-
-struct ContributionsCollection: Codable {
-    let contributionCalendar: ContributionCalendar
-}
-
-struct ContributionCalendar: Codable {
-    let weeks: [Week]
-}
-
-struct Week: Codable {
-    let contributionDays: [ContributionDay]
-}
-
-struct ContributionDay: Codable {
-    let date: String
-    let contributionCount: Int
-}

@@ -31,6 +31,13 @@
 		63DF98B62C9F492500B1CCE2 /* GlassViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DF98B52C9F492500B1CCE2 /* GlassViewModel.swift */; };
 		63DF98B92C9F498300B1CCE2 /* IntroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DF98B82C9F498300B1CCE2 /* IntroView.swift */; };
 		63DF98BB2C9F49FB00B1CCE2 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DF98BA2C9F49FB00B1CCE2 /* MainViewModel.swift */; };
+		63DF98BF2CA03A0B00B1CCE2 /* GitHubStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DF98BE2CA03A0B00B1CCE2 /* GitHubStats.swift */; };
+		63DF98C12CA03A2E00B1CCE2 /* ContributionsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DF98C02CA03A2E00B1CCE2 /* ContributionsData.swift */; };
+		63DF98C32CA03A7300B1CCE2 /* GitHubScoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DF98C22CA03A7300B1CCE2 /* GitHubScoreView.swift */; };
+		63DF98CA2CA04A4800B1CCE2 /* SwiftUICharts in Frameworks */ = {isa = PBXBuildFile; productRef = 63DF98C92CA04A4800B1CCE2 /* SwiftUICharts */; };
+		63DF98CC2CA0514200B1CCE2 /* ScoreBarChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DF98CB2CA0514200B1CCE2 /* ScoreBarChart.swift */; };
+		63DF98CE2CA0515C00B1CCE2 /* ChartData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DF98CD2CA0515C00B1CCE2 /* ChartData.swift */; };
+		63DF98D12CA0691900B1CCE2 /* MailComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DF98D02CA0691900B1CCE2 /* MailComposer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -58,6 +65,12 @@
 		63DF98B52C9F492500B1CCE2 /* GlassViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassViewModel.swift; sourceTree = "<group>"; };
 		63DF98B82C9F498300B1CCE2 /* IntroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroView.swift; sourceTree = "<group>"; };
 		63DF98BA2C9F49FB00B1CCE2 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
+		63DF98BE2CA03A0B00B1CCE2 /* GitHubStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubStats.swift; sourceTree = "<group>"; };
+		63DF98C02CA03A2E00B1CCE2 /* ContributionsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContributionsData.swift; sourceTree = "<group>"; };
+		63DF98C22CA03A7300B1CCE2 /* GitHubScoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubScoreView.swift; sourceTree = "<group>"; };
+		63DF98CB2CA0514200B1CCE2 /* ScoreBarChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreBarChart.swift; sourceTree = "<group>"; };
+		63DF98CD2CA0515C00B1CCE2 /* ChartData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartData.swift; sourceTree = "<group>"; };
+		63DF98D02CA0691900B1CCE2 /* MailComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailComposer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,6 +78,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63DF98CA2CA04A4800B1CCE2 /* SwiftUICharts in Frameworks */,
 				6373EE162C9DC15A009E09CB /* Kingfisher in Frameworks */,
 				6383BEA42C9D9C1A00EDE461 /* KeychainAccess in Frameworks */,
 			);
@@ -171,6 +185,8 @@
 			children = (
 				635922832C9CEF710006BB11 /* StatsView.swift */,
 				635922842C9CEF710006BB11 /* Home.swift */,
+				63DF98C22CA03A7300B1CCE2 /* GitHubScoreView.swift */,
+				63DF98CB2CA0514200B1CCE2 /* ScoreBarChart.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -178,6 +194,7 @@
 		635922862C9CEF710006BB11 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				63DF98CF2CA0690E00B1CCE2 /* Component */,
 				63DF98B72C9F493D00B1CCE2 /* ViewModel */,
 				635922852C9CEF710006BB11 /* View */,
 			);
@@ -258,6 +275,9 @@
 			isa = PBXGroup;
 			children = (
 				6373EE122C9DC0DD009E09CB /* UserInfo.swift */,
+				63DF98BE2CA03A0B00B1CCE2 /* GitHubStats.swift */,
+				63DF98C02CA03A2E00B1CCE2 /* ContributionsData.swift */,
+				63DF98CD2CA0515C00B1CCE2 /* ChartData.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -303,6 +323,14 @@
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
+		63DF98CF2CA0690E00B1CCE2 /* Component */ = {
+			isa = PBXGroup;
+			children = (
+				63DF98D02CA0691900B1CCE2 /* MailComposer.swift */,
+			);
+			path = Component;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -322,6 +350,7 @@
 			packageProductDependencies = (
 				6383BEA32C9D9C1A00EDE461 /* KeychainAccess */,
 				6373EE152C9DC15A009E09CB /* Kingfisher */,
+				63DF98C92CA04A4800B1CCE2 /* SwiftUICharts */,
 			);
 			productName = GitBoost;
 			productReference = 6359222C2C9CEEB30006BB11 /* GitBoost.app */;
@@ -355,6 +384,7 @@
 			packageReferences = (
 				6383BEA22C9D9C1A00EDE461 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
 				6373EE142C9DC15A009E09CB /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				63DF98C82CA04A4800B1CCE2 /* XCRemoteSwiftPackageReference "ChartView" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 6359222D2C9CEEB30006BB11 /* Products */;
@@ -392,16 +422,22 @@
 				63DF98B92C9F498300B1CCE2 /* IntroView.swift in Sources */,
 				6373EE132C9DC0DD009E09CB /* UserInfo.swift in Sources */,
 				6383BEA12C9CF85800EDE461 /* GrassView.swift in Sources */,
+				63DF98CC2CA0514200B1CCE2 /* ScoreBarChart.swift in Sources */,
 				6359229C2C9CEF710006BB11 /* StatsView.swift in Sources */,
 				6359229D2C9CEF710006BB11 /* Home.swift in Sources */,
+				63DF98BF2CA03A0B00B1CCE2 /* GitHubStats.swift in Sources */,
+				63DF98D12CA0691900B1CCE2 /* MailComposer.swift in Sources */,
 				6359229E2C9CEF710006BB11 /* Page.swift in Sources */,
 				6359229F2C9CEF710006BB11 /* ContinueButton.swift in Sources */,
+				63DF98C32CA03A7300B1CCE2 /* GitHubScoreView.swift in Sources */,
 				635922A02C9CEF710006BB11 /* HeaderView.swift in Sources */,
 				63DF98BB2C9F49FB00B1CCE2 /* MainViewModel.swift in Sources */,
 				635922A12C9CEF710006BB11 /* IndicatorView.swift in Sources */,
 				63DF98B62C9F492500B1CCE2 /* GlassViewModel.swift in Sources */,
 				635922A32C9CEF710006BB11 /* MorphingSymbolView.swift in Sources */,
 				635922A42C9CEF710006BB11 /* TextContents.swift in Sources */,
+				63DF98C12CA03A2E00B1CCE2 /* ContributionsData.swift in Sources */,
+				63DF98CE2CA0515C00B1CCE2 /* ChartData.swift in Sources */,
 				6383BE9E2C9CF81900EDE461 /* Contribution.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -634,6 +670,14 @@
 				kind = branch;
 			};
 		};
+		63DF98C82CA04A4800B1CCE2 /* XCRemoteSwiftPackageReference "ChartView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/AppPear/ChartView";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.5.5;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -646,6 +690,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 6383BEA22C9D9C1A00EDE461 /* XCRemoteSwiftPackageReference "KeychainAccess" */;
 			productName = KeychainAccess;
+		};
+		63DF98C92CA04A4800B1CCE2 /* SwiftUICharts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 63DF98C82CA04A4800B1CCE2 /* XCRemoteSwiftPackageReference "ChartView" */;
+			productName = SwiftUICharts;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -21,7 +21,7 @@ struct ContinueButton: View {
                     activePage = activePage.nextPage
                 }
             } label: {
-                Text(activePage == .page4 ? "Github로 로그인" : "다음으로")
+                Text(activePage == .page4 ? "Github 연동하기" : "다음으로")
                     .contentTransition(.identity)
                     .fontWeight(.medium)
                     .foregroundStyle(.black)

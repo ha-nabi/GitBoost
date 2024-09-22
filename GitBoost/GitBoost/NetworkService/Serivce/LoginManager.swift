@@ -272,3 +272,61 @@ final class LoginManager: NSObject, ObservableObject, ASWebAuthenticationPresent
         return window
     }
 }
+
+extension LoginManager {
+    func fetchAdditionalGitHubData(completion: @escaping (Result<AdditionalGitHubData, Error>) -> Void) {
+        guard let token = loadAccessTokenFromKeychain() else {
+            completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Access token not found"])))
+            return
+        }
+
+        let url = URL(string: graphqlURL)!
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("token \(token)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        let query = """
+        {
+            viewer {
+                contributionsCollection {
+                    totalCommitContributions
+                }
+                repositories(first: 100) {
+                    nodes {
+                        stargazerCount
+                    }
+                }
+                pullRequests(last: 100) {
+                    totalCount
+                }
+                repositoriesContributedTo(last: 1) {
+                    totalCount
+                }
+            }
+        }
+        """
+
+        let body = ["query": query]
+        request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: [])
+
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+
+            guard let data = data else {
+                completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "No data received"])))
+                return
+            }
+
+            do {
+                let additionalGitHubData = try JSONDecoder().decode(AdditionalGitHubData.self, from: data)
+                completion(.success(additionalGitHubData))
+            } catch {
+                completion(.failure(error))
+            }
+        }.resume()
+    }
+}
