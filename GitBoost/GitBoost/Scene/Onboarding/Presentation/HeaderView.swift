@@ -25,10 +25,10 @@ struct HeaderView: View {
             Spacer(minLength: 0)
             
             Button("Skip") {
-                activePage = .page4
+                activePage = .page3
             }
             .fontWeight(.semibold)
-            .opacity(activePage != .page4 ? 1 : 0)
+            .opacity(activePage != .page3 ? 1 : 0)
         }
         .foregroundStyle(.white)
         .animation(.snappy(duration: 0.35, extraBounce: 0), value: activePage)
