@@ -26,7 +26,7 @@ struct Home: View {
                         Button {
                             mainViewModel.showScoreSheet = true
                         } label: {
-                            Text("깃허브 점수 확인")
+                            Text(AppLocalized.scoreCheck)
                                 .font(.callout)
                                 .fontWeight(.semibold)
                                 .foregroundStyle(.black)
@@ -78,29 +78,29 @@ struct Home: View {
             }
             .coordinateSpace(name: "SCROLL")
             .confirmationDialog(
-                "로그아웃",
+                AppLocalized.Logout,
                 isPresented: $mainViewModel.showLogoutDialog,
                 titleVisibility: .visible,
                 actions: {
-                    Button("로그아웃", role: .destructive) {
+                    Button(AppLocalized.Logout, role: .destructive) {
                         mainViewModel.logout()
                     }
                 },
                 message: {
-                    Text("현재 계정에서 로그아웃 하시겠어요?")
+                    Text(AppLocalized.logoutText)
                 }
             )
             .confirmationDialog(
-                "탈퇴하기",
+                AppLocalized.toLeave,
                 isPresented: $mainViewModel.showDeleteAccountDialog,
                 titleVisibility: .visible,
                 actions: {
-                    Button("탈퇴하기", role: .destructive) {
+                    Button(AppLocalized.toLeave, role: .destructive) {
                         mainViewModel.deleteAccount()
                     }
                 },
                 message: {
-                    Text("현재 계정에서 로그아웃 하시겠어요?")
+                    Text(AppLocalized.toLeaveText)
                 }
             )
             .onAppear {
@@ -116,14 +116,14 @@ struct Home: View {
             }
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
-                    Menu("정보") {
+                    Menu(AppLocalized.InformationText) {
                         NavigationLink {
                             WebView(url: URL(string: "https://kangciu.notion.site/GitBoost-109518c03e1e80c8b620e34b8cc13676?pvs=4")!)
-                                .navigationTitle("개인정보 처리 방침")
+                                .navigationTitle(AppLocalized.policyText)
                                 .toolbarTitleDisplayMode(.inline)
                         } label: {
                             Label {
-                                Text("개인정보 처리 방침")
+                                Text(AppLocalized.policyText)
                             } icon: {
                                 Image(systemName: "doc.text.fill")
                             }
@@ -131,23 +131,23 @@ struct Home: View {
                         
                         NavigationLink {
                             WebView(url: URL(string: "https://kangciu.notion.site/GitBoost-39134425b4e8453bab23d0801a1e3415?pvs=4")!)
-                                .navigationTitle("이용 약관")
+                                .navigationTitle(AppLocalized.termsText)
                                 .toolbarTitleDisplayMode(.inline)
                         } label: {
                             Label {
-                                Text("이용 약관")
+                                Text(AppLocalized.termsText)
                             } icon: {
                                 Image(systemName: "doc.text.magnifyingglass")
                             }
                         }
                     }
                     
-                    Menu("계정 설정") {
+                    Menu(AppLocalized.accountSettingText) {
                         Button {
                             mainViewModel.showLogoutDialog = true
                         } label: {
                             Label {
-                                Text("로그아웃")
+                                Text(AppLocalized.Logout)
                             } icon: {
                                 Image(systemName: "door.left.hand.open")
                             }
@@ -158,7 +158,7 @@ struct Home: View {
                             mainViewModel.showDeleteAccountDialog = true
                         } label: {
                             Label {
-                                Text("탈퇴하기")
+                                Text(AppLocalized.toLeave)
                             } icon: {
                                 Image(systemName: "trash.slash.fill")
                             }
@@ -171,7 +171,7 @@ struct Home: View {
                         mainViewModel.isShowingMailComposer = true
                     } label: {
                         Label {
-                            Text("피드백 제공")
+                            Text(AppLocalized.feedbackText)
                         } icon: {
                             Image(systemName: "exclamationmark.bubble.fill")
                         }
@@ -186,8 +186,8 @@ struct Home: View {
                     MailComposer(
                         result: $mainViewModel.mailResult,
                         recipientEmail: "a2849535@gmail.com",
-                        subject: "GitBoost 피드백 문의",
-                        body: "GitBoost에 대한 피드백을 남겨주세요."
+                        subject: AppLocalized.mailSubject,
+                        body: AppLocalized.mailBody
                     )
                 }
             }

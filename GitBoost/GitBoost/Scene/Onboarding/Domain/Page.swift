@@ -13,21 +13,21 @@ enum Page: String, CaseIterable {
     case page2 = "link.icloud.fill"
     case page3 = "text.bubble.fill"
     
-    var title: String {
+    var title: LocalizedStringKey {
         switch self {
-        case .page1: return "깃허브 점수 확인하기"
+        case .page1: return AppLocalized.page1Title
 //        case .page2: return "커밋 챌린지에 도전하기"
-        case .page2: return "간편하게 기록을 확인하기"
-        case .page3: return "GitBoost 시작하기"
+        case .page2: return AppLocalized.page2Title
+        case .page3: return AppLocalized.page3Title
         }
     }
     
-    var subTitle: String {
+    var subTitle: LocalizedStringKey {
         switch self {
-        case .page1: return "깃허브 활동을 분석하여\n나만의 점수를 제공합니다."
+        case .page1: return AppLocalized.page1SubTitle
 //        case .page2: return "꾸준한 커밋으로\n깃허브 커밋 챌린지를 완수하세요."
-        case .page2: return "오늘, 이번 주, 그리고\n연속 커밋 기록을 제공합니다."
-        case .page3: return "로그인하여 더 많은 기능을 이용하세요."
+        case .page2: return AppLocalized.page2SubTitle
+        case .page3: return AppLocalized.page3SubTitle
         }
     }
     
