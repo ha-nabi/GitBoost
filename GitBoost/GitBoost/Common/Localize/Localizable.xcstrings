@@ -1,0 +1,375 @@
+{
+  "sourceLanguage" : "ko",
+  "strings" : {
+    "" : {
+
+    },
+    " contributions in the last year" : {
+
+    },
+    " Score" : {
+
+    },
+    "·" : {
+
+    },
+    "%lld" : {
+
+    },
+    "%lld " : {
+
+    },
+    "Count" : {
+
+    },
+    "Detail Stats" : {
+
+    },
+    "End week" : {
+
+    },
+    "End weekday" : {
+
+    },
+    "followers" : {
+
+    },
+    "following" : {
+
+    },
+    "GitBoost" : {
+
+    },
+    "GitBoost 시작하기" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Getting Started with GitBoost"
+          }
+        }
+      }
+    },
+    "GitBoost 피드백 문의" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contact GitBoost Feedback"
+          }
+        }
+      }
+    },
+    "GitBoost에 대한 피드백을 남겨주세요." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please leave feedback on GitBoost.\n"
+          }
+        }
+      }
+    },
+    "GitHub Score" : {
+
+    },
+    "GitHub 연동하기" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sync with GitHub"
+          }
+        }
+      }
+    },
+    "Less" : {
+
+    },
+    "Loading contributions..." : {
+
+    },
+    "More" : {
+
+    },
+    "PR 점수" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Total PRs"
+          }
+        }
+      }
+    },
+    "Score" : {
+
+    },
+    "Score Chart" : {
+
+    },
+    "Skip" : {
+
+    },
+    "Start week" : {
+
+    },
+    "Start weekday" : {
+
+    },
+    "Type" : {
+
+    },
+    "간편하게 기록을 확인하기" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Easy to check records"
+          }
+        }
+      }
+    },
+    "개인정보 처리 방침" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "a policy of handling personal information"
+          }
+        }
+      }
+    },
+    "계정 설정" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Account Settings"
+          }
+        }
+      }
+    },
+    "기여한 리포지토리 점수" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contributed to"
+          }
+        }
+      }
+    },
+    "나의 활동 점수 확인하기" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Check my activity score"
+          }
+        }
+      }
+    },
+    "다음으로" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Next on"
+          }
+        }
+      }
+    },
+    "닫기" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Close"
+          }
+        }
+      }
+    },
+    "로그아웃" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Logout"
+          }
+        }
+      }
+    },
+    "로그인하여 더 많은 기능을 이용하세요." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Log in and take advantage of more features."
+          }
+        }
+      }
+    },
+    "스타 리포지토리 점수" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Total Stars Earned"
+          }
+        }
+      }
+    },
+    "연속" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sequence"
+          }
+        }
+      }
+    },
+    "연속 커밋 점수" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sequence Commit Score"
+          }
+        }
+      }
+    },
+    "오늘" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today"
+          }
+        }
+      }
+    },
+    "오늘, 이번 주, 그리고\n연속 커밋 기록을 제공합니다." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today, this week, and\nProvides continuous commit history."
+          }
+        }
+      }
+    },
+    "이번주" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Week"
+          }
+        }
+      }
+    },
+    "이용 약관" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Terms and Conditions"
+          }
+        }
+      }
+    },
+    "정보" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Information"
+          }
+        }
+      }
+    },
+    "총 커밋 점수" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Total Commits"
+          }
+        }
+      }
+    },
+    "탈퇴하기" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To leave"
+          }
+        }
+      }
+    },
+    "피드백 제공" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Provide feedback"
+          }
+        }
+      }
+    },
+    "현재 계정에서 로그아웃 하시겠어요?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Do you want to log out of your current account?"
+          }
+        }
+      }
+    },
+    "현재 계정에서 탈퇴 하시겠어요?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Would you like to withdraw from your current account?"
+          }
+        }
+      }
+    },
+    "활동 점수 결과" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activity Score Results"
+          }
+        }
+      }
+    },
+    "활동 점수 확인" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Check Activity Score"
+          }
+        }
+      }
+    },
+    "활동을 분석하여\n나만의 점수를 제공합니다." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "by analyzing the activities of\nIt provides my own score."
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

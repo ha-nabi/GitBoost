@@ -62,7 +62,3 @@ struct IntroView: View {
         }
     }
 }
-
-#Preview {
-    IntroView()
-}

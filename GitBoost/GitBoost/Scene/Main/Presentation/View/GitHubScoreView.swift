@@ -45,22 +45,22 @@ struct GitHubScoreView: View {
                 
                 // 세부 점수 섹션
                 Section(header: Text("Detail Stats")) {
-                    DetailScoreRow(title: "총 커밋 점수", subTitle: "Total Commits", score: totalCommitsScore)
-                    DetailScoreRow(title: "스타 리포지토리 점수", subTitle: "Total Stars Earned", score: starsScore)
-                    DetailScoreRow(title: "PR 점수", subTitle: "Total PRs", score: prsScore)
-                    DetailScoreRow(title: "기여한 리포지토리 점수", subTitle: "Contributed Repo Score", score: contributedRepoScore)
-                    DetailScoreRow(title: "연속 커밋 점수", subTitle: "Sequence Commit Score", score: consecutiveCommitsScore)
+                    DetailScoreRow(title: AppLocalized.totalCommitText, subTitle: "Total Commits", score: totalCommitsScore)
+                    DetailScoreRow(title: AppLocalized.starText, subTitle: "Total Stars Earned", score: starsScore)
+                    DetailScoreRow(title: AppLocalized.prText, subTitle: "Total PRs", score: prsScore)
+                    DetailScoreRow(title: AppLocalized.contributedText, subTitle: "Contributed Repo Score", score: contributedRepoScore)
+                    DetailScoreRow(title: AppLocalized.SequenceText, subTitle: "Sequence Commit Score", score: consecutiveCommitsScore)
                 }
             }
             .listStyle(.grouped)
-            .navigationTitle("깃허브 점수 결과")
+            .navigationTitle(AppLocalized.scoreResultText)
             .toolbarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         dismiss()
                     } label: {
-                        Text("닫기")
+                        Text(AppLocalized.dismissText)
                     }
                 }
             }
@@ -69,7 +69,7 @@ struct GitHubScoreView: View {
 }
 
 struct DetailScoreRow: View {
-    let title: String
+    let title: LocalizedStringKey
     let subTitle: String
     let score: Double
     

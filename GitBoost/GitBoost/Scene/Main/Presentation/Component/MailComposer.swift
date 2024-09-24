@@ -13,8 +13,8 @@ struct MailComposer: UIViewControllerRepresentable {
     @Binding var result: Result<MFMailComposeResult, Error>?
 
     var recipientEmail: String
-    var subject: String
-    var body: String
+    var subject: LocalizedStringKey
+    var body: LocalizedStringKey
 
     class Coordinator: NSObject, MFMailComposeViewControllerDelegate {
         var parent: MailComposer
@@ -40,11 +40,21 @@ struct MailComposer: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> MFMailComposeViewController {
         let vc = MFMailComposeViewController()
         vc.setToRecipients([recipientEmail])
-        vc.setSubject(subject)
-        vc.setMessageBody(body, isHTML: false)
+        vc.setSubject(translateLocalizedStringKey(subject))
+        vc.setMessageBody(translateLocalizedStringKey(body), isHTML: false)
         vc.mailComposeDelegate = context.coordinator
         return vc
     }
 
     func updateUIViewController(_ uiViewController: MFMailComposeViewController, context: Context) {}
+
+    private func translateLocalizedStringKey(_ key: LocalizedStringKey) -> String {
+        let mirror = Mirror(reflecting: key)
+        let children = mirror.children
+        if let firstChild = children.first, let keyString = firstChild.value as? String {
+            return NSLocalizedString(keyString, comment: "")
+        } else {
+            return ""
+        }
+    }
 }

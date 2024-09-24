@@ -87,12 +87,17 @@ final class MainViewModel: ObservableObject {
             return
         }
         
+        guard let contributionsData = contributionsData else {
+            print("기여도 데이터가 없습니다.")
+            return
+        }
+
         // 각 항목의 데이터
         let totalCommits = additionalData.data.viewer.contributionsCollection.totalCommitContributions
         let totalStars = additionalData.data.viewer.repositories.nodes.reduce(0) { $0 + $1.stargazerCount }
         let totalPRs = additionalData.data.viewer.pullRequests.totalCount
         let contributedReposLastYear = additionalData.data.viewer.repositoriesContributedTo.totalCount
-        let consecutiveCommits = calculateConsecutiveCommits(from: contributionsData!)
+        let consecutiveCommits = calculateConsecutiveCommits(from: contributionsData)
 
         // 각 항목의 점수를 계산한 후 반올림 처리
         self.totalCommitsScore = (Double(totalCommits) * 0.2).rounded() // 커밋 점수

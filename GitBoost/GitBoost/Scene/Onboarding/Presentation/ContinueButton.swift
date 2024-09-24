@@ -15,18 +15,18 @@ struct ContinueButton: View {
     var body: some View {
         VStack(spacing: 10) {
             Button {
-                if activePage == .page4 {
+                if activePage == .page3 {
                     loginManager.login()
                 } else {
                     activePage = activePage.nextPage
                 }
             } label: {
-                Text(activePage == .page4 ? "Github 연동하기" : "다음으로")
+                Text(activePage == .page3 ? AppLocalized.githubLoginText : AppLocalized.nextText)
                     .contentTransition(.identity)
                     .fontWeight(.medium)
                     .foregroundStyle(.black)
                     .padding(.vertical, 15)
-                    .frame(maxWidth: activePage == .page4 ? 260 : 180)
+                    .frame(maxWidth: activePage == .page3 ? 260 : 180)
                     .background(.white, in: .rect(cornerRadius: 12))
             }
             .animation(.smooth(duration: 0.5, extraBounce: 0), value: activePage)

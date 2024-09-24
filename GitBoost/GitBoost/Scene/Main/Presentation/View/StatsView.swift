@@ -15,20 +15,19 @@ struct StatsView: View {
     var body: some View {
         Section {
             HStack {
-                StatItemView(icon: "checkmark.circle.fill", value: todayCommits, label: "오늘", color: .green)
+                StatItemView(icon: "checkmark.circle.fill", value: todayCommits, label: AppLocalized.todayStat, color: .green)
                 
                 Divider()
                     .padding(.horizontal, 40)
                     .frame(height: 50)
                 
-                StatItemView(icon: "calendar", value: thisWeekCommits, label: "이번주", color: .blue)
+                StatItemView(icon: "calendar", value: thisWeekCommits, label: AppLocalized.weekStat, color: .blue)
                 
                 Divider()
                     .padding(.horizontal, 40)
                     .frame(height: 50)
                 
-                StatItemView(icon: "flame.fill", value: consecutiveCommits, label: "연속", color: .red)
-                
+                StatItemView(icon: "flame.fill", value: consecutiveCommits, label: AppLocalized.sequenceStat, color: .red)
             }
         }
     }
@@ -37,7 +36,7 @@ struct StatsView: View {
 struct StatItemView: View {
     let icon: String
     let value: Int
-    let label: String
+    let label: LocalizedStringKey
     let color: Color
     
     var body: some View {
@@ -49,10 +48,13 @@ struct StatItemView: View {
             Text("\(value)")
                 .fontWeight(.semibold)
             
+            
             Text(label)
                 .font(.footnote)
                 .fontWeight(.medium)
                 .foregroundStyle(Color(.systemGray))
+                .lineLimit(1)
+                .minimumScaleFactor(0.5)
         }
     }
 }
