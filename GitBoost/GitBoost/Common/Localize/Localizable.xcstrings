@@ -19,6 +19,9 @@
     "%lld " : {
 
     },
+    "Activity Score" : {
+
+    },
     "Count" : {
 
     },
@@ -69,9 +72,6 @@
           }
         }
       }
-    },
-    "GitHub Score" : {
-
     },
     "GitHub 연동하기" : {
       "localizations" : {
