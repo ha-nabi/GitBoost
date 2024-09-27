@@ -19,6 +19,12 @@
     "%lld " : {
 
     },
+    "Activity Score" : {
+
+    },
+    "Cancel" : {
+
+    },
     "Count" : {
 
     },
@@ -31,10 +37,19 @@
     "End weekday" : {
 
     },
+    "Enter a number" : {
+
+    },
+    "Enter Review Code" : {
+
+    },
     "followers" : {
 
     },
     "following" : {
+
+    },
+    "For AppStore Review" : {
 
     },
     "GitBoost" : {
@@ -70,9 +85,6 @@
         }
       }
     },
-    "GitHub Score" : {
-
-    },
     "GitHub 연동하기" : {
       "localizations" : {
         "en" : {
@@ -90,6 +102,9 @@
 
     },
     "More" : {
+
+    },
+    "Please enter the code you received from the App Store review." : {
 
     },
     "PR 점수" : {
@@ -115,6 +130,9 @@
 
     },
     "Start weekday" : {
+
+    },
+    "Submit" : {
 
     },
     "Type" : {

@@ -21,7 +21,7 @@ struct GitHubScoreView: View {
         NavigationStack {
             List {
                 // 점수 섹션
-                Section(header: Text("GitHub Score")) {
+                Section(header: Text("Activity Score")) {
                     Text("\(score)")
                         .font(.system(size: 80, weight: .bold))
                         .foregroundColor(score >= 100 ? .green : .red)

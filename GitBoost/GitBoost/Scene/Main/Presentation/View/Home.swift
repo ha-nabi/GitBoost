@@ -10,7 +10,7 @@ import MessageUI
 import SwiftUI
 
 struct Home: View {
-    @StateObject private var mainViewModel = MainViewModel()
+    @EnvironmentObject var mainViewModel: MainViewModel
     @StateObject private var grassViewModel = GlassViewModel()
     
     var safeArea: EdgeInsets
@@ -104,7 +104,9 @@ struct Home: View {
                 }
             )
             .onAppear {
-                mainViewModel.fetchGitHubData()
+                if mainViewModel.isLoggedIn {
+                    mainViewModel.fetchGitHubData()  // 로그인한 상태라면 데이터를 갱신
+                }
             }
         }
         .navigationBarTitle(mainViewModel.scrollViewOffset > 100 ? "" : (mainViewModel.userInfo?.login.uppercased() ?? ""), displayMode: .inline)

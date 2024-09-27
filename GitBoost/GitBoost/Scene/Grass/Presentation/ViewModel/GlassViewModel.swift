@@ -14,50 +14,61 @@ final class GlassViewModel: ObservableObject {
 
     func fetchContributionsData() {
         isLoading = true
-        LoginManager.shared.fetchContributionsData { result in
-            switch result {
-            case .success(let contributionsData):
-                let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "yyyy-MM-dd"
 
-                // 1년 전 날짜 계산
-                let today = Date()
-                guard let oneYearAgo = Calendar.current.date(byAdding: .year, value: -1, to: today) else {
-                    return
-                }
+        // 로그인 여부에 따른 더미 데이터 사용
+        if !LoginManager.shared.isLoggedIn {
+            // 더미 데이터를 생성
+            let dummyContributions = Contribution.generate()
+            let totalContributions = dummyContributions.reduce(0) { $0 + $1.count }
 
-                // 1년 전 이후 기여 필터링
-                let allContributions = contributionsData.data.viewer.contributionsCollection.contributionCalendar.weeks
-                    .flatMap { $0.contributionDays }
-                    .compactMap { contributionDay -> Contribution? in
-                        guard let date = dateFormatter.date(from: contributionDay.date), date >= oneYearAgo else {
-                            return nil
-                        }
-                        return Contribution(date: date, count: contributionDay.contributionCount)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) { // 가벼운 딜레이 추가
+                self.contributions = dummyContributions
+                self.totalContributionsLastYear = totalContributions
+                self.isLoading = false
+            }
+        } else {
+            // 실제 데이터를 가져오는 로직
+            LoginManager.shared.fetchContributionsData { result in
+                switch result {
+                case .success(let contributionsData):
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.dateFormat = "yyyy-MM-dd"
+
+                    let today = Date()
+                    guard let oneYearAgo = Calendar.current.date(byAdding: .year, value: -1, to: today) else {
+                        return
                     }
 
-                // 최근 1년 동안의 총 기여 계산
-                let totalContributions = allContributions.reduce(0) { $0 + $1.count }
-                DispatchQueue.main.async {
-                    self.totalContributionsLastYear = totalContributions
-                }
+                    let allContributions = contributionsData.data.viewer.contributionsCollection.contributionCalendar.weeks
+                        .flatMap { $0.contributionDays }
+                        .compactMap { contributionDay -> Contribution? in
+                            guard let date = dateFormatter.date(from: contributionDay.date), date >= oneYearAgo else {
+                                return nil
+                            }
+                            return Contribution(date: date, count: contributionDay.contributionCount)
+                        }
 
-                // 최근 5개월 데이터 필터링
-                guard let fiveMonthsAgo = Calendar.current.date(byAdding: .month, value: -5, to: today) else {
-                    return
-                }
+                    let totalContributions = allContributions.reduce(0) { $0 + $1.count }
+                    DispatchQueue.main.async {
+                        self.totalContributionsLastYear = totalContributions
+                    }
 
-                let recentContributions = allContributions.filter { $0.date >= fiveMonthsAgo }
+                    guard let fiveMonthsAgo = Calendar.current.date(byAdding: .month, value: -5, to: today) else {
+                        return
+                    }
 
-                DispatchQueue.main.async {
-                    self.contributions = recentContributions
-                    self.isLoading = false
-                }
+                    let recentContributions = allContributions.filter { $0.date >= fiveMonthsAgo }
 
-            case .failure(let error):
-                print("Error fetching contributions data: \(error)")
-                DispatchQueue.main.async {
-                    self.isLoading = false
+                    DispatchQueue.main.async {
+                        self.contributions = recentContributions
+                        self.isLoading = false
+                    }
+
+                case .failure(let error):
+                    print("Error fetching contributions data: \(error)")
+                    DispatchQueue.main.async {
+                        self.isLoading = false
+                    }
                 }
             }
         }
