@@ -34,7 +34,20 @@ final class MainViewModel: ObservableObject {
     @Published var prsScore: Double = 0
     @Published var contributedRepoScore: Double = 0
     @Published var consecutiveCommitsScore: Double = 0
-
+    
+    // 심사를 위한 더미데이터
+    @Published var isLoggedIn: Bool
+    @Published var isDummyLoggedOut = false
+    @Published var isDummyDeleted = false
+    
+    init(isLoggedIn: Bool) {
+        self.isLoggedIn = isLoggedIn
+        if isLoggedIn {
+            fetchGitHubData()  // 로그인 상태라면 실제 GitHub 데이터를 로드
+        } else {
+            loadDummyData()  // 로그인되지 않았다면 더미 데이터 로드
+        }
+    }
     
     func fetchGitHubData() {
         // GitHub 프로필 데이터 가져오기
@@ -167,13 +180,24 @@ final class MainViewModel: ObservableObject {
     }
     
     func logout() {
-        print("로그아웃")
-        LoginManager.shared.logout()
+        if isLoggedIn {
+            print("GitHub 로그아웃")
+            LoginManager.shared.logout()
+        } else {
+            print("더미데이터 로그아웃")
+            isDummyLoggedOut = true
+        }
     }
     
+    // 계정 삭제
     func deleteAccount() {
-        print("탈퇴하기")
-        LoginManager.shared.deleteAccount()
+        if isLoggedIn {
+            print("GitHub 계정 삭제")
+            LoginManager.shared.deleteAccount()
+        } else {
+            print("더미데이터 탈퇴")
+            isDummyDeleted = true
+        }
     }
 
     // 날짜 포맷터
@@ -182,4 +206,56 @@ final class MainViewModel: ObservableObject {
         formatter.dateFormat = "yyyy-MM-dd"
         return formatter
     }()
+    
+    // 더미 데이터 로드
+    private func loadDummyData() {
+        self.userInfo = UserInfo(
+            login: "code-king",
+            avatar_url: "https://avatars.githubusercontent.com/u/182574809?v=4",
+            name: "David",
+            followers: 74,
+            following: 65
+        )
+        
+        self.contributionsData = ContributionsData(
+            data: ViewerWrapper(
+                viewer: Viewer(
+                    contributionsCollection: ContributionsCollection(
+                        contributionCalendar: ContributionCalendar(
+                            weeks: [Week(contributionDays: [
+                                ContributionDay(date: "2024-09-22", contributionCount: 5),
+                                ContributionDay(date: "2024-09-21", contributionCount: 3),
+                                ContributionDay(date: "2024-09-20", contributionCount: 10)
+                            ])]
+                        )
+                    )
+                )
+            )
+        )
+        
+        self.additionalGitHubData = AdditionalGitHubData(
+            data: AdditionalViewerWrapper(
+                viewer: AdditionalViewer(
+                    contributionsCollection: AdditionalContributionsCollection(
+                        totalCommitContributions: 500
+                    ),
+                    repositories: RepositoryList(
+                        nodes: [Repository(stargazerCount: 150)]
+                    ),
+                    pullRequests: AdditionalPRInfo(totalCount: 10),
+                    repositoriesContributedTo: AdditionalRepoInfo(totalCount: 5)
+                )
+            )
+        )
+        
+        self.calculateGitHubScore()
+    }
+    
+    private func calculateDummyScore() -> Int {
+        let commitsScore = 1234 * 0.2
+        let starsScore = 10.0
+        let prsScore = 5 * 0.5
+        let contributedRepoScore = 3.0
+        return Int(commitsScore + starsScore + prsScore + contributedRepoScore)
+    }
 }

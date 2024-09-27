@@ -8,20 +8,32 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject private var mainViewModel: MainViewModel
+    
+    @Environment(\.dismiss) private var dismiss
+    
+    init() {
+        _mainViewModel = StateObject(wrappedValue: MainViewModel(isLoggedIn: UserDefaults.standard.bool(forKey: "isLoggedIn")))
+    }
+    
     var body: some View {
-        NavigationStack {
-            GeometryReader {
-                let safeArea = $0.safeAreaInsets
-                let size = $0.size
-                
-                Home(safeArea: safeArea, size: size)
-                    .ignoresSafeArea(.container, edges: .top)
+        GeometryReader {
+            let safeArea = $0.safeAreaInsets
+            let size = $0.size
+            
+            Home(safeArea: safeArea, size: size)
+                .environmentObject(mainViewModel)
+                .ignoresSafeArea(.container, edges: .top)
+        }
+        .onChange(of: mainViewModel.isDummyLoggedOut) { _, loggedOut in
+            if loggedOut {
+                dismiss()
             }
         }
-        .tint(.white)
+        .onChange(of: mainViewModel.isDummyDeleted) { _, deleted in
+            if deleted {
+                dismiss()
+            }
+        }
     }
-}
-
-#Preview {
-    ContentView()
 }
