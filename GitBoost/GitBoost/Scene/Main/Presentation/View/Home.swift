@@ -118,9 +118,17 @@ struct Home: View {
                     .opacity(0.9)
             }
             ToolbarItem(placement: .topBarTrailing) {
-                Image(systemName: "magnifyingglass")
-                    .fontWeight(.bold)
-                    .opacity(0.9)
+                Button {
+                    mainViewModel.isShowingSearch = true
+                } label: {
+                    Image(systemName: "magnifyingglass")
+                        .font(.subheadline)
+                        .fontWeight(.bold)
+                        .opacity(0.9)
+                }
+                .navigationDestination(isPresented: $mainViewModel.isShowingSearch) {
+                    SearchView()
+                }
             }
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
@@ -187,7 +195,7 @@ struct Home: View {
                     .disabled(!MFMailComposeViewController.canSendMail())
                 } label: {
                     Image(systemName: "ellipsis.circle.fill")
-                        .font(.title3)
+                        .font(.subheadline)
                         .foregroundStyle(.white)
                         .opacity(0.9)
                 }
