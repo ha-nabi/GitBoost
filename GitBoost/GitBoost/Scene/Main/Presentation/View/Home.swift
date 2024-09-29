@@ -115,6 +115,12 @@ struct Home: View {
                 Text("GitBoost")
                     .font(.title3)
                     .fontWeight(.bold)
+                    .opacity(0.9)
+            }
+            ToolbarItem(placement: .topBarTrailing) {
+                Image(systemName: "magnifyingglass")
+                    .fontWeight(.bold)
+                    .opacity(0.9)
             }
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
@@ -183,6 +189,7 @@ struct Home: View {
                     Image(systemName: "ellipsis.circle.fill")
                         .font(.title3)
                         .foregroundStyle(.white)
+                        .opacity(0.9)
                 }
                 .sheet(isPresented: $mainViewModel.isShowingMailComposer) {
                     MailComposer(
