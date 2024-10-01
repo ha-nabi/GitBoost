@@ -5,16 +5,16 @@
 //  Created by 강치우 on 9/29/24.
 //
 
-import Kingfisher
 import SwiftUI
+import Kingfisher
 
 struct SearchView: View {
-    @State private var searchQuery: String = ""
+    @StateObject private var viewModel = SearchViewModel()
     @State private var isSearchFieldFocused: Bool = true
     
     var body: some View {
         VStack {
-            if searchQuery.isEmpty {
+            if viewModel.searchQuery.isEmpty {
                 ScrollView(.vertical) {
                     Divider()
                         .padding(.bottom, 250)
@@ -30,33 +30,56 @@ struct SearchView: View {
                     }
                 }
                 .padding(.bottom)
+            } else if viewModel.userProfiles.isEmpty {
+                ScrollView(.vertical) {
+                    Divider()
+                        .padding(.bottom, 250)
+                    
+                    VStack(alignment: .center) {
+                        Text("검색 결과가 없습니다.")
+                            .font(.headline)
+                            .foregroundStyle(.gray)
+                    }
+                }
+                .padding(.bottom)
             } else {
                 VStack {
                     Divider()
                     
                     List {
                         Section {
-                            HStack {
-                                Image("im1")
-                                    .resizable()
-                                    .scaledToFill()
-                                    .foregroundStyle(.white)
-                                    .frame(width: 50, height: 50)
-                                    .clipShape(Circle())
-                                
-                                VStack(alignment: .leading, spacing: 8) {
-                                    Text("치우")
-                                        .font(.headline)
+                            ForEach(viewModel.userProfiles) { profile in
+                                HStack {
+                                    KFImage(URL(string: profile.avatarUrl))
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: 50, height: 50)
+                                        .clipShape(Circle())
                                     
-                                    Text("ha-nabi")
-                                        .font(.subheadline)
-                                        .lineLimit(1)
-                                        .minimumScaleFactor(0.5)
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        if let name = profile.name, !name.isEmpty {
+                                            Text(name) // name
+                                                .font(.headline)
+                                            
+                                            Text(profile.login) // login
+                                                .font(.subheadline)
+                                                .foregroundColor(.gray)
+                                        } else {
+                                            Text(profile.login)
+                                                .font(.headline)
+                                        }
+                                    }
+                                    .padding(.leading, 8)
                                 }
-                                .padding(.leading, 8)
+                                .onAppear {
+                                    // 프로필 리스트의 끝에 도달하면 데이터 추가 요청
+                                    if profile == viewModel.userProfiles.last {
+                                        viewModel.fetchMoreUsers()
+                                    }
+                                }
                             }
                         } header: {
-                            Text("사용자")
+                            Text("검색된 사용자")
                                 .font(.title3)
                                 .fontWeight(.bold)
                                 .foregroundStyle(.white)
@@ -68,7 +91,7 @@ struct SearchView: View {
         }
         .navigationTitle("탐색")
         .navigationBarTitleDisplayMode(.inline)
-        .searchable(text: $searchQuery,
+        .searchable(text: $viewModel.searchQuery,
                     isPresented: $isSearchFieldFocused,
                     placement: .navigationBarDrawer(displayMode: .always),
                     prompt: "GitHub 사용자 검색")
