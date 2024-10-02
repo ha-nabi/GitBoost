@@ -26,9 +26,9 @@ final class MainViewModel: ObservableObject {
     // 메일 관련
     @Published var isShowingMailComposer = false
     @Published var mailResult: Result<MFMailComposeResult, Error>? = nil
-    
-    @Published var githubScore: Int = 0
+
     // 차트에서 사용할 데이터
+    @Published var githubScore: Int = 0
     @Published var totalCommitsScore: Double = 0
     @Published var starsScore: Double = 0
     @Published var prsScore: Double = 0
@@ -43,11 +43,28 @@ final class MainViewModel: ObservableObject {
     @Published var alertTitle = ""
     @Published var alertMessage = ""
     
+    // 알림 관련
+    @Published var hasCommittedToday: Bool = false
+    @Published var isNotificationsEnabled: Bool {
+        didSet {
+            if isNotificationsEnabled {
+                // 알림을 켜면 알림 스케줄링
+                NotificationManager.shared.scheduleCommitReminderNotification()
+            } else {
+                // 알림을 끄면 모든 알림 취소
+                NotificationManager.shared.removeScheduledNotifications()
+            }
+            // 상태 저장
+            UserDefaults.standard.set(isNotificationsEnabled, forKey: "isNotificationsEnabled")
+        }
+    }
+    
     private let loginManager: LoginManager
     
     init(isLoggedIn: Bool, loginManager: LoginManager = .shared) {
         self.isLoggedIn = isLoggedIn
         self.loginManager = loginManager
+        self.isNotificationsEnabled = UserDefaults.standard.bool(forKey: "isNotificationsEnabled")
         if isLoggedIn {
             Task {
                 await fetchGitHubData()
@@ -178,6 +195,47 @@ final class MainViewModel: ObservableObject {
         return consecutiveCommits
     }
     
+    // GitHub에서 오늘 커밋이 있는지 확인
+    func checkTodaysCommits() async {
+        guard let userInfo = try? await LoginManager.shared.fetchUserInfo() else {
+            print("Error: Could not fetch user info.")
+            return
+        }
+
+        let githubUsername = userInfo.login // 로그인된 유저 이름 사용
+        let url = URL(string: "https://api.github.com/users/\(githubUsername)/events")!
+        
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            let events = try JSONDecoder().decode([GitHubEvent].self, from: data)
+            
+            let today = Date().formattedDate // 오늘 날짜
+            self.hasCommittedToday = events.contains(where: { event in
+                event.type == "PushEvent" && event.created_at.starts(with: today)
+            })
+        } catch {
+            print("Error fetching GitHub events: \(error.localizedDescription)")
+        }
+    }
+    
+    // MARK: - GitHub에서 오늘 커밋이 있는지 확인 (테스트)
+    // 실제 테스트 시에는 API를 통해 커밋 여부를 확인합니다
+//    func checkTodaysCommits() async {
+//        let testMode = true // true일 때 강제로 커밋을 안 했다고 가정
+//        if testMode {
+//            self.hasCommittedToday = false
+//        } else {
+//            self.hasCommittedToday = true
+//        }
+//
+//        // 강제로 커밋을 안 했을 때 알림 스케줄링
+//        if !hasCommittedToday {
+//            NotificationManager.shared.scheduleCommitReminderNotification(atHour: 5, minute: 10, second: 30)
+//        } else {
+//            NotificationManager.shared.removeScheduledNotifications()
+//        }
+//    }
+    
     func logout() {
         if isLoggedIn {
             print("GitHub 로그아웃")
@@ -284,5 +342,13 @@ final class MainViewModel: ObservableObject {
         )
         
         self.calculateGitHubScore()
+    }
+}
+
+extension Date {
+    var formattedDate: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter.string(from: self)
     }
 }

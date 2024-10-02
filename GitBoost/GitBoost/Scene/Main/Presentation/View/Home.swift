@@ -105,13 +105,6 @@ struct Home: View {
                     Text(AppLocalized.toLeaveText)
                 }
             )
-            .onAppear {
-                if mainViewModel.isLoggedIn {
-                    Task {
-                        await mainViewModel.fetchGitHubData()  // 로그인한 상태라면 데이터를 갱신
-                    }
-                }
-            }
         }
         .navigationBarTitle(mainViewModel.scrollViewOffset > 100 ? "" : (mainViewModel.userInfo?.login.uppercased() ?? ""), displayMode: .inline)
         .toolbar {
@@ -124,6 +117,30 @@ struct Home: View {
             
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
+                    Menu("알림 설정") {
+                        Button {
+                            mainViewModel.isNotificationsEnabled = true
+                        } label: {
+                            Label {
+                                Text("활성화")
+                            } icon: {
+                                Image(systemName: "bell.fill")
+                            }
+                        }
+                        .disabled(mainViewModel.isNotificationsEnabled)
+                        
+                        Button {
+                            mainViewModel.isNotificationsEnabled = false
+                        } label: {
+                            Label {
+                                Text("비활성화")
+                            } icon: {
+                                Image(systemName: "bell.slash.fill")
+                            }
+                        }
+                        .disabled(!mainViewModel.isNotificationsEnabled)
+                    }
+                    
                     Menu(AppLocalized.InformationText) {
                         NavigationLink {
                             WebView(url: URL(string: "https://kangciu.notion.site/GitBoost-109518c03e1e80c8b620e34b8cc13676?pvs=4")!)
