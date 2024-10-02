@@ -117,19 +117,7 @@ struct Home: View {
                     .fontWeight(.bold)
                     .opacity(0.9)
             }
-            ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    mainViewModel.isShowingSearch = true
-                } label: {
-                    Image(systemName: "magnifyingglass")
-                        .font(.subheadline)
-                        .fontWeight(.bold)
-                        .opacity(0.9)
-                }
-                .navigationDestination(isPresented: $mainViewModel.isShowingSearch) {
-                    SearchView()
-                }
-            }
+            
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
                     Menu(AppLocalized.InformationText) {

@@ -40,9 +40,6 @@ final class MainViewModel: ObservableObject {
     @Published var isDummyLoggedOut = false
     @Published var isDummyDeleted = false
     
-    // 검색
-    @Published var isShowingSearch: Bool = false
-    
     init(isLoggedIn: Bool) {
         self.isLoggedIn = isLoggedIn
         if isLoggedIn {
