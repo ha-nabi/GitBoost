@@ -35,73 +35,72 @@ final class MainViewModel: ObservableObject {
     @Published var contributedRepoScore: Double = 0
     @Published var consecutiveCommitsScore: Double = 0
     
-    // 심사를 위한 더미데이터
+    // 로그인 상태 및 알림 관련
     @Published var isLoggedIn: Bool
     @Published var isDummyLoggedOut = false
     @Published var isDummyDeleted = false
+    @Published var showAlert = false
+    @Published var alertTitle = ""
+    @Published var alertMessage = ""
     
-    init(isLoggedIn: Bool) {
+    private let loginManager: LoginManager
+    
+    init(isLoggedIn: Bool, loginManager: LoginManager = .shared) {
         self.isLoggedIn = isLoggedIn
+        self.loginManager = loginManager
         if isLoggedIn {
-            fetchGitHubData()  // 로그인 상태라면 실제 GitHub 데이터를 로드
+            Task {
+                await fetchGitHubData()
+            }
         } else {
-            loadDummyData()  // 로그인되지 않았다면 더미 데이터 로드
+            loadDummyData()
         }
     }
     
-    func fetchGitHubData() {
+    func fetchGitHubData() async {
         // GitHub 프로필 데이터 가져오기
-        LoginManager.shared.fetchUserInfo { result in
-            switch result {
-            case .success(let userInfo):
-                DispatchQueue.main.async {
-                    self.userInfo = userInfo
-                }
-            case .failure(let error):
-                DispatchQueue.main.async {
-                    self.errorMessage = error.localizedDescription
-                }
+        do {
+            let userInfo = try await loginManager.fetchUserInfo()
+            DispatchQueue.main.async {
+                self.userInfo = userInfo
+            }
+        } catch {
+            DispatchQueue.main.async {
+                self.errorMessage = error.localizedDescription
             }
         }
         
         // GitHub 기여도 데이터 가져오기
-        LoginManager.shared.fetchContributionsData { result in
-            switch result {
-            case .success(let data):
-                DispatchQueue.main.async {
-                    self.contributionsData = data
-                }
-            case .failure(let error):
-                DispatchQueue.main.async {
-                    self.errorMessage = error.localizedDescription
-                    print("Failed to fetch contributions data: \(error.localizedDescription)")
-                }
+        do {
+            let contributionsData = try await loginManager.fetchContributionsData()
+            DispatchQueue.main.async {
+                self.contributionsData = contributionsData
+            }
+        } catch {
+            DispatchQueue.main.async {
+                self.errorMessage = error.localizedDescription
+                print("Failed to fetch contributions data: \(error.localizedDescription)")
             }
         }
         
-        LoginManager.shared.fetchAdditionalGitHubData { result in
-            switch result {
-            case .success(let additionalData):
-                DispatchQueue.main.async {
-                    self.additionalGitHubData = additionalData
-                    self.calculateGitHubScore()  // 점수 계산
-                }
-            case .failure(let error):
-                DispatchQueue.main.async {
-                    self.errorMessage = error.localizedDescription
-                }
+        // 추가 GitHub 데이터 가져오기
+        do {
+            let additionalGitHubData = try await loginManager.fetchAdditionalGitHubData()
+            DispatchQueue.main.async {
+                self.additionalGitHubData = additionalGitHubData
+                self.calculateGitHubScore()  // 점수 계산
+            }
+        } catch {
+            DispatchQueue.main.async {
+                self.errorMessage = error.localizedDescription
             }
         }
     }
     
     func calculateGitHubScore() {
-        guard let additionalData = additionalGitHubData else {
-            print("추가 GitHub 데이터가 없습니다.")
-            return
-        }
-        
-        guard let contributionsData = contributionsData else {
-            print("기여도 데이터가 없습니다.")
+        guard let additionalData = additionalGitHubData,
+              let contributionsData = contributionsData else {
+            print("GitHub 데이터가 없습니다.")
             return
         }
 
@@ -113,12 +112,13 @@ final class MainViewModel: ObservableObject {
         let consecutiveCommits = calculateConsecutiveCommits(from: contributionsData)
 
         // 각 항목의 점수를 계산한 후 반올림 처리
-        self.totalCommitsScore = (Double(totalCommits) * 0.2).rounded() // 커밋 점수
-        self.starsScore = Double(totalStars).rounded() // 받은 스타 점수
-        self.prsScore = (Double(totalPRs) * 0.5).rounded() // PR 점수
-        self.contributedRepoScore = (Double(contributedReposLastYear) * 1).rounded() // 기여 리포 점수
-        self.consecutiveCommitsScore = (Double(consecutiveCommits) * 0.5).rounded() // 연속 커밋 점수
+        self.totalCommitsScore = (Double(totalCommits) * 0.2).rounded()
+        self.starsScore = Double(totalStars).rounded()
+        self.prsScore = (Double(totalPRs) * 0.5).rounded()
+        self.contributedRepoScore = Double(contributedReposLastYear).rounded()
+        self.consecutiveCommitsScore = (Double(consecutiveCommits) * 0.5).rounded()
 
+        // 로그 출력
         print("총 커밋 수: \(totalCommits), 점수: \(totalCommitsScore)")
         print("받은 Stars 수: \(totalStars), 점수: \(starsScore)")
         print("총 PR 수: \(totalPRs), 점수: \(prsScore)")
@@ -129,7 +129,6 @@ final class MainViewModel: ObservableObject {
         let totalScore = totalCommitsScore + starsScore + prsScore + contributedRepoScore + consecutiveCommitsScore
         self.githubScore = Int(totalScore)
 
-        // 최종 점수 로그 출력
         print("최종 GitHub 점수 (반올림): \(self.githubScore)")
     }
     
@@ -182,22 +181,58 @@ final class MainViewModel: ObservableObject {
     func logout() {
         if isLoggedIn {
             print("GitHub 로그아웃")
-            LoginManager.shared.logout()
+            loginManager.logout()
+            isLoggedIn = false
+            showAlert(title: "로그아웃", message: "성공적으로 로그아웃되었습니다.")
         } else {
             print("더미데이터 로그아웃")
             isDummyLoggedOut = true
+            showAlert(title: "로그아웃", message: "더미 계정에서 로그아웃되었습니다.")
         }
     }
     
-    // 계정 삭제
     func deleteAccount() {
         if isLoggedIn {
-            print("GitHub 계정 삭제")
-            LoginManager.shared.deleteAccount()
+            Task {
+                do {
+                    try await loginManager.deleteAccount()
+                    DispatchQueue.main.async {
+                        self.isLoggedIn = false
+                        self.showAlert(title: "계정 삭제 완료", message: "GitHub 계정이 성공적으로 삭제되었습니다.")
+                        self.clearUserData()
+                    }
+                } catch {
+                    DispatchQueue.main.async {
+                        self.showAlert(title: "계정 삭제 실패", message: "계정 삭제 중 오류가 발생했습니다: \(error.localizedDescription)")
+                    }
+                }
+            }
         } else {
             print("더미데이터 탈퇴")
             isDummyDeleted = true
+            showAlert(title: "더미 계정 삭제", message: "더미 계정이 성공적으로 삭제되었습니다.")
+            clearUserData()
         }
+    }
+
+    private func showAlert(title: String, message: String) {
+        self.alertTitle = title
+        self.alertMessage = message
+        self.showAlert = true
+    }
+
+    private func clearUserData() {
+        userInfo = nil
+        contributionsData = nil
+        additionalGitHubData = nil
+        followers = []
+        following = []
+        githubScore = 0
+        totalCommitsScore = 0
+        starsScore = 0
+        prsScore = 0
+        contributedRepoScore = 0
+        consecutiveCommitsScore = 0
     }
 
     // 날짜 포맷터
@@ -249,13 +284,5 @@ final class MainViewModel: ObservableObject {
         )
         
         self.calculateGitHubScore()
-    }
-    
-    private func calculateDummyScore() -> Int {
-        let commitsScore = 1234 * 0.2
-        let starsScore = 10.0
-        let prsScore = 5 * 0.5
-        let contributedRepoScore = 3.0
-        return Int(commitsScore + starsScore + prsScore + contributedRepoScore)
     }
 }

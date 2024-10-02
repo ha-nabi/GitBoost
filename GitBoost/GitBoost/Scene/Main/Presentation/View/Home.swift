@@ -73,7 +73,7 @@ struct Home: View {
                 }
             }
             .refreshable {
-                mainViewModel.fetchGitHubData()
+                await mainViewModel.fetchGitHubData()
                 grassViewModel.fetchContributionsData()
             }
             .coordinateSpace(name: "SCROLL")
@@ -105,7 +105,9 @@ struct Home: View {
             )
             .onAppear {
                 if mainViewModel.isLoggedIn {
-                    mainViewModel.fetchGitHubData()  // 로그인한 상태라면 데이터를 갱신
+                    Task {
+                        await mainViewModel.fetchGitHubData()  // 로그인한 상태라면 데이터를 갱신
+                    }
                 }
             }
         }
