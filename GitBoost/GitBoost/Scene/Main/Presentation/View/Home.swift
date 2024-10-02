@@ -73,7 +73,9 @@ struct Home: View {
                 }
             }
             .refreshable {
-                await mainViewModel.fetchGitHubData()
+                Task {
+                    await mainViewModel.fetchGitHubData()
+                }
                 grassViewModel.fetchContributionsData()
             }
             .coordinateSpace(name: "SCROLL")
