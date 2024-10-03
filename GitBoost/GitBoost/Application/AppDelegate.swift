@@ -30,24 +30,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Task {
             let isLoggedIn = LoginManager.shared.isLoggedIn
             print("로그인 상태: \(isLoggedIn)")
-            let mainViewModel = MainViewModel(isLoggedIn: isLoggedIn)
             
-            print("커밋 상태 확인")
-            
-            await mainViewModel.checkTodaysCommits()
+            // 로그인된 경우에만 커밋 상태 확인 및 알림 예약
+            if isLoggedIn {
+                let mainViewModel = MainViewModel()
+                
+                print("커밋 상태 확인")
+                await mainViewModel.checkTodaysCommits()
 
-            // 알림 활성화 상태 확인
-            if mainViewModel.isNotificationsEnabled {
-                // 커밋을 하지 않은 경우에만 알림을 예약합니다.
-                if !mainViewModel.hasCommittedToday {
-                    print("커밋을 하지 않은 상태. 20시에 알림 트리거 발생")
-                    NotificationManager.shared.scheduleCommitReminderNotification(atHour: 20)  // 20시에 알림 예약
+                // 알림 활성화 상태 확인
+                if mainViewModel.isNotificationsEnabled {
+                    // 커밋을 하지 않은 경우에만 알림을 예약합니다.
+                    if !mainViewModel.hasCommittedToday {
+                        print("커밋을 하지 않은 상태. 20시에 알림 트리거 발생")
+                        NotificationManager.shared.scheduleCommitReminderNotification(atHour: 20)  // 20시에 알림 예약
+                    } else {
+                        print("커밋을 한 상태. 알림 발송하지 않음")
+                        NotificationManager.shared.removeScheduledNotifications()  // 기존 알림 취소
+                    }
                 } else {
-                    print("커밋을 한 상태. 알림 발송하지 않음")
-                    NotificationManager.shared.removeScheduledNotifications()  // 기존 알림 취소
+                    print("알림이 비활성화된 상태. 알림 예약하지 않음")
                 }
             } else {
-                print("알림이 비활성화된 상태. 알림 예약하지 않음")
+                print("로그인되지 않은 상태. 알림 예약하지 않음")
             }
         }
     }

@@ -36,7 +36,7 @@ final class MainViewModel: ObservableObject {
     @Published var consecutiveCommitsScore: Double = 0
     
     // 로그인 상태 및 알림 관련
-    @Published var isLoggedIn: Bool
+    @Published var isLoggedIn: Bool = false
     @Published var isDummyLoggedOut = false
     @Published var isDummyDeleted = false
     @Published var showAlert = false
@@ -61,17 +61,9 @@ final class MainViewModel: ObservableObject {
     
     private let loginManager: LoginManager
     
-    init(isLoggedIn: Bool, loginManager: LoginManager = .shared) {
-        self.isLoggedIn = isLoggedIn
+    init(loginManager: LoginManager = .shared) {
         self.loginManager = loginManager
         self.isNotificationsEnabled = UserDefaults.standard.bool(forKey: "isNotificationsEnabled")
-        if isLoggedIn {
-            Task {
-                await fetchGitHubData()
-            }
-        } else {
-            loadDummyData()
-        }
     }
     
     func fetchGitHubData() async {
@@ -104,7 +96,7 @@ final class MainViewModel: ObservableObject {
             let additionalGitHubData = try await loginManager.fetchAdditionalGitHubData()
             DispatchQueue.main.async {
                 self.additionalGitHubData = additionalGitHubData
-                self.calculateGitHubScore()  // 점수 계산
+                self.calculateGitHubScore()
             }
         } catch {
             DispatchQueue.main.async {
@@ -113,6 +105,7 @@ final class MainViewModel: ObservableObject {
         }
     }
     
+    // 점수 계산
     func calculateGitHubScore() {
         guard let additionalData = additionalGitHubData,
               let contributionsData = contributionsData else {
@@ -246,7 +239,7 @@ final class MainViewModel: ObservableObject {
 //    }
     
     func logout() {
-        if isLoggedIn {
+        if LoginManager.shared.isLoggedIn {
             print("GitHub 로그아웃")
             loginManager.logout()
             isLoggedIn = false
@@ -259,7 +252,7 @@ final class MainViewModel: ObservableObject {
     }
     
     func deleteAccount() {
-        if isLoggedIn {
+        if LoginManager.shared.isLoggedIn {
             Task {
                 do {
                     try await loginManager.deleteAccount()
@@ -310,7 +303,7 @@ final class MainViewModel: ObservableObject {
     }()
     
     // 더미 데이터 로드
-    private func loadDummyData() {
+    func loadDummyData() {
         self.userInfo = UserInfo(
             login: "code-king",
             avatar_url: "https://avatars.githubusercontent.com/u/182574809?v=4",

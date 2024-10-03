@@ -10,8 +10,11 @@ import MessageUI
 import SwiftUI
 
 struct Home: View {
-    @EnvironmentObject var mainViewModel: MainViewModel
+    @ObservedObject var mainViewModel: MainViewModel
+    
     @StateObject private var grassViewModel = GlassViewModel()
+    
+    @Environment(\.dismiss) var dismiss
     
     var safeArea: EdgeInsets
     var size: CGSize
