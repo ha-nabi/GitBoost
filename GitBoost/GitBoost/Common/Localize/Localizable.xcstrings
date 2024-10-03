@@ -309,17 +309,6 @@
         }
       }
     },
-    "오늘의 커밋이 정상적으로 처리되었습니다." : {
-      "comment" : "Reminder to Success commit",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Today's commit has been processed normally."
-          }
-        }
-      }
-    },
     "이번주" : {
       "localizations" : {
         "en" : {
