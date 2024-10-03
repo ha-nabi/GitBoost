@@ -49,7 +49,7 @@ final class MainViewModel: ObservableObject {
         didSet {
             if isNotificationsEnabled {
                 // 알림을 켜면 알림 스케줄링
-                NotificationManager.shared.scheduleCommitReminderNotification()
+                NotificationManager.shared.scheduleCommitReminderNotification(atHour: 20)
             } else {
                 // 알림을 끄면 모든 알림 취소
                 NotificationManager.shared.removeScheduledNotifications()
@@ -213,6 +213,7 @@ final class MainViewModel: ObservableObject {
             let today = Date().formattedDate
             
             self.hasCommittedToday = events.contains(where: { event in
+                print("Checking event type: \(event.type) at \(event.created_at)")
                 return event.type == "PushEvent" && event.created_at.starts(with: today)
             })
             

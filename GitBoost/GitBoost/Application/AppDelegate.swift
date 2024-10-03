@@ -36,14 +36,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
             await mainViewModel.checkTodaysCommits()
 
-            // 커밋 상태에 따라 알림 예약
-            if !mainViewModel.hasCommittedToday {
-                print("커밋을 하지 않은 상태. 커밋 하지 않았을 때 알림 트리거 발생")
-                NotificationManager.shared.scheduleCommitReminderNotification()  // 커밋 안 했을 때 알림 예약
+            // 알림 활성화 상태 확인
+            if mainViewModel.isNotificationsEnabled {
+                // 커밋을 하지 않은 경우에만 알림을 예약합니다.
+                if !mainViewModel.hasCommittedToday {
+                    print("커밋을 하지 않은 상태. 20시에 알림 트리거 발생")
+                    NotificationManager.shared.scheduleCommitReminderNotification(atHour: 20)  // 20시에 알림 예약
+                } else {
+                    print("커밋을 한 상태. 알림 발송하지 않음")
+                    NotificationManager.shared.removeScheduledNotifications()  // 기존 알림 취소
+                }
             } else {
-                print("커밋을 한 상태. 커밋을 했을 때의 알림 트리거 발생")
-                NotificationManager.shared.removeScheduledNotifications()  // 기존 알림 취소
-                NotificationManager.shared.scheduleCommitCompletionNotification()  // 커밋 완료 알림 예약
+                print("알림이 비활성화된 상태. 알림 예약하지 않음")
             }
         }
     }
