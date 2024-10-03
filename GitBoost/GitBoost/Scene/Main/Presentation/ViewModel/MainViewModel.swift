@@ -26,82 +26,90 @@ final class MainViewModel: ObservableObject {
     // 메일 관련
     @Published var isShowingMailComposer = false
     @Published var mailResult: Result<MFMailComposeResult, Error>? = nil
-    
-    @Published var githubScore: Int = 0
+
     // 차트에서 사용할 데이터
+    @Published var githubScore: Int = 0
     @Published var totalCommitsScore: Double = 0
     @Published var starsScore: Double = 0
     @Published var prsScore: Double = 0
     @Published var contributedRepoScore: Double = 0
     @Published var consecutiveCommitsScore: Double = 0
     
-    // 심사를 위한 더미데이터
-    @Published var isLoggedIn: Bool
+    // 로그인 상태 및 알림 관련
+    @Published var isLoggedIn: Bool = false
     @Published var isDummyLoggedOut = false
     @Published var isDummyDeleted = false
+    @Published var showAlert = false
+    @Published var alertTitle = ""
+    @Published var alertMessage = ""
     
-    init(isLoggedIn: Bool) {
-        self.isLoggedIn = isLoggedIn
-        if isLoggedIn {
-            fetchGitHubData()  // 로그인 상태라면 실제 GitHub 데이터를 로드
-        } else {
-            loadDummyData()  // 로그인되지 않았다면 더미 데이터 로드
+    // 알림 관련
+    @Published var hasCommittedToday: Bool = false
+    @Published var isNotificationsEnabled: Bool {
+        didSet {
+            if isNotificationsEnabled {
+                // 알림을 켜면 알림 스케줄링
+                NotificationManager.shared.scheduleCommitReminderNotification(atHour: 20)
+            } else {
+                // 알림을 끄면 모든 알림 취소
+                NotificationManager.shared.removeScheduledNotifications()
+            }
+            // 상태 저장
+            UserDefaults.standard.set(isNotificationsEnabled, forKey: "isNotificationsEnabled")
         }
     }
     
-    func fetchGitHubData() {
+    private let loginManager: LoginManager
+    
+    init(loginManager: LoginManager = .shared) {
+        self.loginManager = loginManager
+        self.isNotificationsEnabled = UserDefaults.standard.bool(forKey: "isNotificationsEnabled")
+    }
+    
+    func fetchGitHubData() async {
         // GitHub 프로필 데이터 가져오기
-        LoginManager.shared.fetchUserInfo { result in
-            switch result {
-            case .success(let userInfo):
-                DispatchQueue.main.async {
-                    self.userInfo = userInfo
-                }
-            case .failure(let error):
-                DispatchQueue.main.async {
-                    self.errorMessage = error.localizedDescription
-                }
+        do {
+            let userInfo = try await loginManager.fetchUserInfo()
+            DispatchQueue.main.async {
+                self.userInfo = userInfo
+            }
+        } catch {
+            DispatchQueue.main.async {
+                self.errorMessage = error.localizedDescription
             }
         }
-        
+
         // GitHub 기여도 데이터 가져오기
-        LoginManager.shared.fetchContributionsData { result in
-            switch result {
-            case .success(let data):
-                DispatchQueue.main.async {
-                    self.contributionsData = data
-                }
-            case .failure(let error):
-                DispatchQueue.main.async {
-                    self.errorMessage = error.localizedDescription
-                    print("Failed to fetch contributions data: \(error.localizedDescription)")
-                }
+        do {
+            let contributionsData = try await loginManager.fetchContributionsData()
+            DispatchQueue.main.async {
+                self.contributionsData = contributionsData
+            }
+        } catch {
+            DispatchQueue.main.async {
+                self.errorMessage = error.localizedDescription
             }
         }
-        
-        LoginManager.shared.fetchAdditionalGitHubData { result in
-            switch result {
-            case .success(let additionalData):
-                DispatchQueue.main.async {
-                    self.additionalGitHubData = additionalData
-                    self.calculateGitHubScore()  // 점수 계산
-                }
-            case .failure(let error):
-                DispatchQueue.main.async {
-                    self.errorMessage = error.localizedDescription
-                }
+
+        // 추가 GitHub 데이터 가져오기
+        do {
+            let additionalGitHubData = try await loginManager.fetchAdditionalGitHubData()
+            DispatchQueue.main.async {
+                self.additionalGitHubData = additionalGitHubData
+                self.calculateGitHubScore()
+            }
+        } catch {
+            DispatchQueue.main.async {
+                self.errorMessage = error.localizedDescription
             }
         }
     }
     
+    // 점수 계산
     func calculateGitHubScore() {
-        guard let additionalData = additionalGitHubData else {
-            print("추가 GitHub 데이터가 없습니다.")
-            return
-        }
-        
-        guard let contributionsData = contributionsData else {
-            print("기여도 데이터가 없습니다.")
+        guard let additionalData = additionalGitHubData,
+              let contributionsData = contributionsData else {
+            print("GitHub 데이터가 없습니다.")
             return
         }
 
@@ -113,12 +121,13 @@ final class MainViewModel: ObservableObject {
         let consecutiveCommits = calculateConsecutiveCommits(from: contributionsData)
 
         // 각 항목의 점수를 계산한 후 반올림 처리
-        self.totalCommitsScore = (Double(totalCommits) * 0.2).rounded() // 커밋 점수
-        self.starsScore = Double(totalStars).rounded() // 받은 스타 점수
-        self.prsScore = (Double(totalPRs) * 0.5).rounded() // PR 점수
-        self.contributedRepoScore = (Double(contributedReposLastYear) * 1).rounded() // 기여 리포 점수
-        self.consecutiveCommitsScore = (Double(consecutiveCommits) * 0.5).rounded() // 연속 커밋 점수
+        self.totalCommitsScore = (Double(totalCommits) * 0.2).rounded()
+        self.starsScore = Double(totalStars).rounded()
+        self.prsScore = (Double(totalPRs) * 0.5).rounded()
+        self.contributedRepoScore = Double(contributedReposLastYear).rounded()
+        self.consecutiveCommitsScore = (Double(consecutiveCommits) * 0.5).rounded()
 
+        // 로그 출력
         print("총 커밋 수: \(totalCommits), 점수: \(totalCommitsScore)")
         print("받은 Stars 수: \(totalStars), 점수: \(starsScore)")
         print("총 PR 수: \(totalPRs), 점수: \(prsScore)")
@@ -129,7 +138,6 @@ final class MainViewModel: ObservableObject {
         let totalScore = totalCommitsScore + starsScore + prsScore + contributedRepoScore + consecutiveCommitsScore
         self.githubScore = Int(totalScore)
 
-        // 최종 점수 로그 출력
         print("최종 GitHub 점수 (반올림): \(self.githubScore)")
     }
     
@@ -179,25 +187,112 @@ final class MainViewModel: ObservableObject {
         return consecutiveCommits
     }
     
-    func logout() {
-        if isLoggedIn {
-            print("GitHub 로그아웃")
-            LoginManager.shared.logout()
-        } else {
-            print("더미데이터 로그아웃")
-            isDummyLoggedOut = true
+    // GitHub에서 오늘 커밋이 있는지 확인
+    func checkTodaysCommits() async {
+        guard let userInfo = try? await LoginManager.shared.fetchUserInfo() else {
+            print("Error: Could not fetch user info.")
+            return
+        }
+
+        let githubUsername = userInfo.login // 로그인된 유저 이름 사용
+        print("이벤트 발생 시킬 유저 아이디: \(githubUsername)")
+        
+        let url = URL(string: "https://api.github.com/users/\(githubUsername)/events")!
+        
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            let events = try JSONDecoder().decode([GitHubEvent].self, from: data)
+            
+            let today = Date().formattedDate
+            
+            self.hasCommittedToday = events.contains(where: { event in
+                print("Checking event type: \(event.type) at \(event.created_at)")
+                return event.type == "PushEvent" && event.created_at.starts(with: today)
+            })
+            
+            if self.hasCommittedToday {
+                print("사용자가 오늘 커밋했습니다.")
+            } else {
+                print("사용자가 오늘 커밋을 하지 않았습니다.")
+            }
+        } catch {
+            print("Error fetching GitHub events: \(error.localizedDescription)")
         }
     }
     
-    // 계정 삭제
+    // MARK: - GitHub에서 오늘 커밋이 있는지 확인 (테스트)
+    // 실제 테스트 시에는 API를 통해 커밋 여부를 확인합니다
+//    func checkTodaysCommits() async {
+//        let testMode = true // true일 때 강제로 커밋을 안 했다고 가정
+//        if testMode {
+//            self.hasCommittedToday = false
+//        } else {
+//            self.hasCommittedToday = true
+//        }
+//
+//        // 강제로 커밋을 안 했을 때 알림 스케줄링
+//        if !hasCommittedToday {
+//            NotificationManager.shared.scheduleCommitReminderNotification(atHour: 5, minute: 10, second: 30)
+//        } else {
+//            NotificationManager.shared.removeScheduledNotifications()
+//        }
+//    }
+    
+    func logout() {
+        if LoginManager.shared.isLoggedIn {
+            print("GitHub 로그아웃")
+            loginManager.logout()
+            isLoggedIn = false
+            showAlert(title: "로그아웃", message: "성공적으로 로그아웃되었습니다.")
+        } else {
+            print("더미데이터 로그아웃")
+            isDummyLoggedOut = true
+            showAlert(title: "로그아웃", message: "더미 계정에서 로그아웃되었습니다.")
+        }
+    }
+    
     func deleteAccount() {
-        if isLoggedIn {
-            print("GitHub 계정 삭제")
-            LoginManager.shared.deleteAccount()
+        if LoginManager.shared.isLoggedIn {
+            Task {
+                do {
+                    try await loginManager.deleteAccount()
+                    DispatchQueue.main.async {
+                        self.isLoggedIn = false
+                        self.showAlert(title: "계정 삭제 완료", message: "GitHub 계정이 성공적으로 삭제되었습니다.")
+                        self.clearUserData()
+                    }
+                } catch {
+                    DispatchQueue.main.async {
+                        self.showAlert(title: "계정 삭제 실패", message: "계정 삭제 중 오류가 발생했습니다: \(error.localizedDescription)")
+                    }
+                }
+            }
         } else {
             print("더미데이터 탈퇴")
             isDummyDeleted = true
+            showAlert(title: "더미 계정 삭제", message: "더미 계정이 성공적으로 삭제되었습니다.")
+            clearUserData()
         }
+    }
+
+    private func showAlert(title: String, message: String) {
+        self.alertTitle = title
+        self.alertMessage = message
+        self.showAlert = true
+    }
+
+    private func clearUserData() {
+        userInfo = nil
+        contributionsData = nil
+        additionalGitHubData = nil
+        followers = []
+        following = []
+        githubScore = 0
+        totalCommitsScore = 0
+        starsScore = 0
+        prsScore = 0
+        contributedRepoScore = 0
+        consecutiveCommitsScore = 0
     }
 
     // 날짜 포맷터
@@ -208,7 +303,7 @@ final class MainViewModel: ObservableObject {
     }()
     
     // 더미 데이터 로드
-    private func loadDummyData() {
+    func loadDummyData() {
         self.userInfo = UserInfo(
             login: "code-king",
             avatar_url: "https://avatars.githubusercontent.com/u/182574809?v=4",
@@ -250,12 +345,12 @@ final class MainViewModel: ObservableObject {
         
         self.calculateGitHubScore()
     }
-    
-    private func calculateDummyScore() -> Int {
-        let commitsScore = 1234 * 0.2
-        let starsScore = 10.0
-        let prsScore = 5 * 0.5
-        let contributedRepoScore = 3.0
-        return Int(commitsScore + starsScore + prsScore + contributedRepoScore)
+}
+
+extension Date {
+    var formattedDate: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter.string(from: self)
     }
 }

@@ -8,8 +8,6 @@
 import SwiftUI
 
 struct IntroView: View {
-    @AppStorage("isLoggedIn") var isLoggedIn: Bool = false
-    
     @ObservedObject var loginManager = LoginManager.shared
     
     @State private var activePage: Page = .page1
@@ -18,7 +16,7 @@ struct IntroView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                if isLoggedIn {
+                if LoginManager.shared.isLoggedIn {
                     ContentView()
                 } else {
                     VStack {

@@ -228,12 +228,32 @@
         }
       }
     },
+    "비활성화" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deactivation"
+          }
+        }
+      }
+    },
     "스타 리포지토리 점수" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Total Stars Earned"
+          }
+        }
+      }
+    },
+    "알림 설정" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notifications"
           }
         }
       }
@@ -264,6 +284,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Today"
+          }
+        }
+      }
+    },
+    "오늘 커밋을 잊으신건 아닌가요?" : {
+      "comment" : "Reminder to commit",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Didn't you forget to commit today?"
           }
         }
       }
@@ -384,6 +415,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "by analyzing the activities of\nIt provides my own score."
+          }
+        }
+      }
+    },
+    "활성화" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activation"
           }
         }
       }

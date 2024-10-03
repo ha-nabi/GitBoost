@@ -27,6 +27,9 @@
 		635922A42C9CEF710006BB11 /* TextContents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6359228F2C9CEF710006BB11 /* TextContents.swift */; };
 		6373EE132C9DC0DD009E09CB /* UserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6373EE122C9DC0DD009E09CB /* UserInfo.swift */; };
 		6373EE162C9DC15A009E09CB /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 6373EE152C9DC15A009E09CB /* Kingfisher */; };
+		637ED04E2CADD8DC00653161 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637ED04D2CADD8DC00653161 /* NotificationManager.swift */; };
+		637ED0502CADD93700653161 /* GitHubEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637ED04F2CADD93700653161 /* GitHubEvent.swift */; };
+		637ED0522CADD95200653161 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637ED0512CADD95200653161 /* AppDelegate.swift */; };
 		6383BE9E2C9CF81900EDE461 /* Contribution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6383BE9D2C9CF81900EDE461 /* Contribution.swift */; };
 		6383BEA12C9CF85800EDE461 /* GrassView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6383BEA02C9CF85800EDE461 /* GrassView.swift */; };
 		6383BEA42C9D9C1A00EDE461 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 6383BEA32C9D9C1A00EDE461 /* KeychainAccess */; };
@@ -40,6 +43,7 @@
 		63DF98CE2CA0515C00B1CCE2 /* ChartData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DF98CD2CA0515C00B1CCE2 /* ChartData.swift */; };
 		63DF98D12CA0691900B1CCE2 /* MailComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DF98D02CA0691900B1CCE2 /* MailComposer.swift */; };
 		63DF98D42CA0846900B1CCE2 /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DF98D32CA0846900B1CCE2 /* WebView.swift */; };
+		63F07A752CABBEB100BD8404 /* UIApplication+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F07A742CABBEB100BD8404 /* UIApplication+.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -64,6 +68,9 @@
 		6359228F2C9CEF710006BB11 /* TextContents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextContents.swift; sourceTree = "<group>"; };
 		635922A72C9CF04B0006BB11 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		6373EE122C9DC0DD009E09CB /* UserInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfo.swift; sourceTree = "<group>"; };
+		637ED04D2CADD8DC00653161 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
+		637ED04F2CADD93700653161 /* GitHubEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubEvent.swift; sourceTree = "<group>"; };
+		637ED0512CADD95200653161 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6383BE9D2C9CF81900EDE461 /* Contribution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Contribution.swift; sourceTree = "<group>"; };
 		6383BEA02C9CF85800EDE461 /* GrassView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrassView.swift; sourceTree = "<group>"; };
 		63DF98B52C9F492500B1CCE2 /* GlassViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassViewModel.swift; sourceTree = "<group>"; };
@@ -76,6 +83,7 @@
 		63DF98CD2CA0515C00B1CCE2 /* ChartData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartData.swift; sourceTree = "<group>"; };
 		63DF98D02CA0691900B1CCE2 /* MailComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailComposer.swift; sourceTree = "<group>"; };
 		63DF98D32CA0846900B1CCE2 /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
+		63F07A742CABBEB100BD8404 /* UIApplication+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,6 +128,7 @@
 			isa = PBXGroup;
 			children = (
 				635922732C9CEF710006BB11 /* GitBoostApp.swift */,
+				637ED0512CADD95200653161 /* AppDelegate.swift */,
 				635922722C9CEF710006BB11 /* ContentView.swift */,
 				63DF98B82C9F498300B1CCE2 /* IntroView.swift */,
 			);
@@ -137,6 +146,7 @@
 		635922772C9CEF710006BB11 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				63F07A732CABBE3500BD8404 /* Extenstion */,
 				633DA17C2CA238E100654981 /* Localize */,
 				63DF98D22CA0845A00B1CCE2 /* Component */,
 				635922762C9CEF710006BB11 /* Reusable */,
@@ -157,6 +167,7 @@
 			children = (
 				6359227A2C9CEF710006BB11 /* Keys.swift */,
 				6359227B2C9CEF710006BB11 /* LoginManager.swift */,
+				637ED04D2CADD8DC00653161 /* NotificationManager.swift */,
 			);
 			path = Serivce;
 			sourceTree = "<group>";
@@ -293,6 +304,7 @@
 				63DF98BE2CA03A0B00B1CCE2 /* GitHubStats.swift */,
 				63DF98C02CA03A2E00B1CCE2 /* ContributionsData.swift */,
 				63DF98CD2CA0515C00B1CCE2 /* ChartData.swift */,
+				637ED04F2CADD93700653161 /* GitHubEvent.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -352,6 +364,14 @@
 				63DF98D32CA0846900B1CCE2 /* WebView.swift */,
 			);
 			path = Component;
+			sourceTree = "<group>";
+		};
+		63F07A732CABBE3500BD8404 /* Extenstion */ = {
+			isa = PBXGroup;
+			children = (
+				63F07A742CABBEB100BD8404 /* UIApplication+.swift */,
+			);
+			path = Extenstion;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -441,6 +461,7 @@
 				635922992C9CEF710006BB11 /* CircularProgressView.swift in Sources */,
 				6359229A2C9CEF710006BB11 /* Keys.swift in Sources */,
 				6359229B2C9CEF710006BB11 /* LoginManager.swift in Sources */,
+				637ED0502CADD93700653161 /* GitHubEvent.swift in Sources */,
 				63DF98B92C9F498300B1CCE2 /* IntroView.swift in Sources */,
 				633DA17E2CA238F700654981 /* AppLocalized.swift in Sources */,
 				6373EE132C9DC0DD009E09CB /* UserInfo.swift in Sources */,
@@ -456,12 +477,15 @@
 				63DF98C32CA03A7300B1CCE2 /* GitHubScoreView.swift in Sources */,
 				635922A02C9CEF710006BB11 /* HeaderView.swift in Sources */,
 				63DF98BB2C9F49FB00B1CCE2 /* MainViewModel.swift in Sources */,
+				63F07A752CABBEB100BD8404 /* UIApplication+.swift in Sources */,
+				637ED0522CADD95200653161 /* AppDelegate.swift in Sources */,
 				635922A12C9CEF710006BB11 /* IndicatorView.swift in Sources */,
 				63DF98B62C9F492500B1CCE2 /* GlassViewModel.swift in Sources */,
 				635922A32C9CEF710006BB11 /* MorphingSymbolView.swift in Sources */,
 				635922A42C9CEF710006BB11 /* TextContents.swift in Sources */,
 				63DF98C12CA03A2E00B1CCE2 /* ContributionsData.swift in Sources */,
 				63DF98CE2CA0515C00B1CCE2 /* ChartData.swift in Sources */,
+				637ED04E2CADD8DC00653161 /* NotificationManager.swift in Sources */,
 				6383BE9E2C9CF81900EDE461 /* Contribution.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -599,7 +623,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_ASSET_PATHS = "\"GitBoost/Resources/Preview Content\"";
 				DEVELOPMENT_TEAM = ND6356Y385;
 				ENABLE_PREVIEWS = YES;
@@ -616,7 +640,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.0.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ciu.GitBoost;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -636,7 +660,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_ASSET_PATHS = "\"GitBoost/Resources/Preview Content\"";
 				DEVELOPMENT_TEAM = ND6356Y385;
 				ENABLE_PREVIEWS = YES;
@@ -653,7 +677,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.0.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ciu.GitBoost;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

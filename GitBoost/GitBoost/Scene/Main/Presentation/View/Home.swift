@@ -10,8 +10,11 @@ import MessageUI
 import SwiftUI
 
 struct Home: View {
-    @EnvironmentObject var mainViewModel: MainViewModel
+    @ObservedObject var mainViewModel: MainViewModel
+    
     @StateObject private var grassViewModel = GlassViewModel()
+    
+    @Environment(\.dismiss) var dismiss
     
     var safeArea: EdgeInsets
     var size: CGSize
@@ -73,7 +76,9 @@ struct Home: View {
                 }
             }
             .refreshable {
-                mainViewModel.fetchGitHubData()
+                Task {
+                    await mainViewModel.fetchGitHubData()
+                }
                 grassViewModel.fetchContributionsData()
             }
             .coordinateSpace(name: "SCROLL")
@@ -103,11 +108,6 @@ struct Home: View {
                     Text(AppLocalized.toLeaveText)
                 }
             )
-            .onAppear {
-                if mainViewModel.isLoggedIn {
-                    mainViewModel.fetchGitHubData()  // 로그인한 상태라면 데이터를 갱신
-                }
-            }
         }
         .navigationBarTitle(mainViewModel.scrollViewOffset > 100 ? "" : (mainViewModel.userInfo?.login.uppercased() ?? ""), displayMode: .inline)
         .toolbar {
@@ -115,9 +115,35 @@ struct Home: View {
                 Text("GitBoost")
                     .font(.title3)
                     .fontWeight(.bold)
+                    .opacity(0.9)
             }
+            
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
+                    Menu(AppLocalized.SetNotificationsText) {
+                        Button {
+                            mainViewModel.isNotificationsEnabled = true
+                        } label: {
+                            Label {
+                                Text(AppLocalized.ActivationText)
+                            } icon: {
+                                Image(systemName: "bell.fill")
+                            }
+                        }
+                        .disabled(mainViewModel.isNotificationsEnabled)
+                        
+                        Button {
+                            mainViewModel.isNotificationsEnabled = false
+                        } label: {
+                            Label {
+                                Text(AppLocalized.DeactivationText)
+                            } icon: {
+                                Image(systemName: "bell.slash.fill")
+                            }
+                        }
+                        .disabled(!mainViewModel.isNotificationsEnabled)
+                    }
+                    
                     Menu(AppLocalized.InformationText) {
                         NavigationLink {
                             WebView(url: URL(string: "https://kangciu.notion.site/GitBoost-109518c03e1e80c8b620e34b8cc13676?pvs=4")!)
@@ -181,8 +207,9 @@ struct Home: View {
                     .disabled(!MFMailComposeViewController.canSendMail())
                 } label: {
                     Image(systemName: "ellipsis.circle.fill")
-                        .font(.title3)
+                        .font(.subheadline)
                         .foregroundStyle(.white)
+                        .opacity(0.9)
                 }
                 .sheet(isPresented: $mainViewModel.isShowingMailComposer) {
                     MailComposer(
