@@ -86,7 +86,7 @@ final class MainViewModel: ObservableObject {
                 self.errorMessage = error.localizedDescription
             }
         }
-        
+
         // GitHub 기여도 데이터 가져오기
         do {
             let contributionsData = try await loginManager.fetchContributionsData()
@@ -96,10 +96,9 @@ final class MainViewModel: ObservableObject {
         } catch {
             DispatchQueue.main.async {
                 self.errorMessage = error.localizedDescription
-                print("Failed to fetch contributions data: \(error.localizedDescription)")
             }
         }
-        
+
         // 추가 GitHub 데이터 가져오기
         do {
             let additionalGitHubData = try await loginManager.fetchAdditionalGitHubData()
@@ -203,16 +202,25 @@ final class MainViewModel: ObservableObject {
         }
 
         let githubUsername = userInfo.login // 로그인된 유저 이름 사용
+        print("이벤트 발생 시킬 유저 아이디: \(githubUsername)")
+        
         let url = URL(string: "https://api.github.com/users/\(githubUsername)/events")!
         
         do {
             let (data, _) = try await URLSession.shared.data(from: url)
             let events = try JSONDecoder().decode([GitHubEvent].self, from: data)
             
-            let today = Date().formattedDate // 오늘 날짜
+            let today = Date().formattedDate
+            
             self.hasCommittedToday = events.contains(where: { event in
-                event.type == "PushEvent" && event.created_at.starts(with: today)
+                return event.type == "PushEvent" && event.created_at.starts(with: today)
             })
+            
+            if self.hasCommittedToday {
+                print("사용자가 오늘 커밋했습니다.")
+            } else {
+                print("사용자가 오늘 커밋을 하지 않았습니다.")
+            }
         } catch {
             print("Error fetching GitHub events: \(error.localizedDescription)")
         }

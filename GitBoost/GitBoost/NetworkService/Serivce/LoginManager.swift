@@ -204,7 +204,7 @@ final class LoginManager: NSObject, ObservableObject, ASWebAuthenticationPresent
         return try JSONDecoder().decode(T.self, from: data)
     }
 
-    // MARK: - Keychain 관련 메소드
+    // MARK: - Keychain 관련 메서드
     private func storeAccessTokenInKeychain(token: String) {
         let keychain = Keychain(service: "com.yourapp.gitboost")
         keychain["github_access_token"] = token

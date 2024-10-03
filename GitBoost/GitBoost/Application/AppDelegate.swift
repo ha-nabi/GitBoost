@@ -11,14 +11,10 @@ import UserNotifications
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
         // 알림 권한 요청
         NotificationManager.shared.requestAuthorization()
-        
-        // 6시 알림 스케줄링
-        NotificationManager.shared.scheduleCommitReminderNotification()
-        // MARK: 테스트용도
-//        NotificationManager.shared.scheduleCommitReminderNotification(atHour: 5, minute: 10, second: 30)
+    
+        checkAndScheduleNotifications()  // 앱 시작 시 커밋 상태 확인
         
         UNUserNotificationCenter.current().delegate = self
         
@@ -27,20 +23,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     // 앱이 백그라운드에서 다시 활성화될 때 커밋 상태 체크
     func applicationDidBecomeActive(_ application: UIApplication) {
+        checkAndScheduleNotifications()
+    }
+
+    func checkAndScheduleNotifications() {
         Task {
             let isLoggedIn = LoginManager.shared.isLoggedIn
+            print("로그인 상태: \(isLoggedIn)")
             let mainViewModel = MainViewModel(isLoggedIn: isLoggedIn)
-
+            
+            print("커밋 상태 확인")
+            
             await mainViewModel.checkTodaysCommits()
 
+            // 커밋 상태에 따라 알림 예약
             if !mainViewModel.hasCommittedToday {
-                // 커밋이 없으면 알림을 스케줄링
-                NotificationManager.shared.scheduleCommitReminderNotification()
-                // MARK: 테스트 용도
-//                NotificationManager.shared.scheduleCommitReminderNotification(atHour: 5, minute: 10, second: 30)
+                print("커밋을 하지 않은 상태. 커밋 하지 않았을 때 알림 트리거 발생")
+                NotificationManager.shared.scheduleCommitReminderNotification()  // 커밋 안 했을 때 알림 예약
             } else {
-                // 커밋이 있으면 알림을 취소
-                NotificationManager.shared.removeScheduledNotifications()
+                print("커밋을 한 상태. 커밋을 했을 때의 알림 트리거 발생")
+                NotificationManager.shared.removeScheduledNotifications()  // 기존 알림 취소
+                NotificationManager.shared.scheduleCommitCompletionNotification()  // 커밋 완료 알림 예약
             }
         }
     }

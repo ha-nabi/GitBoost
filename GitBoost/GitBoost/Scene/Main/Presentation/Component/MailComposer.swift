@@ -9,7 +9,7 @@ import SwiftUI
 import MessageUI
 
 struct MailComposer: UIViewControllerRepresentable {
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) var dismiss
     @Binding var result: Result<MFMailComposeResult, Error>?
 
     var recipientEmail: String
@@ -29,7 +29,7 @@ struct MailComposer: UIViewControllerRepresentable {
             } else {
                 parent.result = .success(result)
             }
-            parent.presentationMode.wrappedValue.dismiss()
+            parent.dismiss()
         }
     }
 

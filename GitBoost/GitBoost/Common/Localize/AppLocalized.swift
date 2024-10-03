@@ -49,8 +49,9 @@ enum AppLocalized {
     static let githubLoginText: LocalizedStringKey = "GitHub 연동하기"
     static let nextText: LocalizedStringKey = "다음으로"
     
-    // MARK: CommitNotification
+    // MARK: Notification
     static let CommitReminderNotificationText = NSLocalizedString("오늘 커밋을 잊으신건 아닌가요?", comment: "Reminder to commit")
+    static let CommitReminderNotificationSuccessText = NSLocalizedString("오늘의 커밋이 정상적으로 처리되었습니다.", comment: "Reminder to Success commit")
     static let SetNotificationsText: LocalizedStringKey = "알림 설정"
     static let ActivationText: LocalizedStringKey = "활성화"
     static let DeactivationText: LocalizedStringKey = "비활성화"
