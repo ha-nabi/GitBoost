@@ -117,12 +117,12 @@ struct Home: View {
             
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
-                    Menu("알림 설정") {
+                    Menu(AppLocalized.SetNotificationsText) {
                         Button {
                             mainViewModel.isNotificationsEnabled = true
                         } label: {
                             Label {
-                                Text("활성화")
+                                Text(AppLocalized.ActivationText)
                             } icon: {
                                 Image(systemName: "bell.fill")
                             }
@@ -133,7 +133,7 @@ struct Home: View {
                             mainViewModel.isNotificationsEnabled = false
                         } label: {
                             Label {
-                                Text("비활성화")
+                                Text(AppLocalized.DeactivationText)
                             } icon: {
                                 Image(systemName: "bell.slash.fill")
                             }

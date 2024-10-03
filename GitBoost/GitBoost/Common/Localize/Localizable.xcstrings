@@ -229,7 +229,14 @@
       }
     },
     "비활성화" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deactivation"
+          }
+        }
+      }
     },
     "스타 리포지토리 점수" : {
       "localizations" : {
@@ -242,7 +249,14 @@
       }
     },
     "알림 설정" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notifications"
+          }
+        }
+      }
     },
     "연속" : {
       "localizations" : {
@@ -270,6 +284,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Today"
+          }
+        }
+      }
+    },
+    "오늘 커밋을 잊으신건 아닌가요?" : {
+      "comment" : "Reminder to commit",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Didn't you forget to commit today?"
           }
         }
       }
@@ -395,7 +420,14 @@
       }
     },
     "활성화" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activation"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"
