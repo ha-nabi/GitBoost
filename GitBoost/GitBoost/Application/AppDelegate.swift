@@ -31,25 +31,39 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let isLoggedIn = LoginManager.shared.isLoggedIn
             print("로그인 상태: \(isLoggedIn)")
             
-            // 로그인된 경우에만 커밋 상태 확인 및 알림 예약
             if isLoggedIn {
                 let mainViewModel = MainViewModel()
                 
-                print("커밋 상태 확인")
-                await mainViewModel.checkTodaysCommits()
-
-                // 알림 활성화 상태 확인
-                if mainViewModel.isNotificationsEnabled {
-                    // 커밋을 하지 않은 경우에만 알림을 예약합니다.
-                    if !mainViewModel.hasCommittedToday {
-                        print("커밋을 하지 않은 상태. 20시에 알림 트리거 발생")
-                        NotificationManager.shared.scheduleCommitReminderNotification(atHour: 20)  // 20시에 알림 예약
+                print("GitHub 데이터를 가져오는 중...")
+                await mainViewModel.fetchGitHubData()  // 기여 데이터를 먼저 가져옵니다
+                
+                if let contributionsData = mainViewModel.contributionsData {
+                    let userTimeZone = TimeZone.current  // 사용자의 로컬 시간대
+                    print("사용자 시간대: \(userTimeZone.identifier)")
+                    
+                    let hasCommittedToday = mainViewModel.checkTodaysCommits(from: contributionsData, in: userTimeZone)
+                    
+                    // 커밋 여부에 따라 로그 출력
+                    if hasCommittedToday {
+                        print("오늘 커밋을 했습니다.")
                     } else {
-                        print("커밋을 한 상태. 알림 발송하지 않음")
-                        NotificationManager.shared.removeScheduledNotifications()  // 기존 알림 취소
+                        print("오늘 커밋을 하지 않았습니다.")
+                    }
+                    
+                    // 알림 활성화 상태 확인
+                    if mainViewModel.isNotificationsEnabled {
+                        if !hasCommittedToday {
+                            print("커밋을 하지 않은 상태. 20시에 알림 예약")
+                            NotificationManager.shared.scheduleCommitReminderNotification(atHour: 20)
+                        } else {
+                            print("커밋을 한 상태. 알림 발송하지 않음")
+                            NotificationManager.shared.removeScheduledNotifications()  // 기존 알림 취소
+                        }
+                    } else {
+                        print("알림이 비활성화된 상태. 알림 예약하지 않음")
                     }
                 } else {
-                    print("알림이 비활성화된 상태. 알림 예약하지 않음")
+                    print("기여 데이터를 가져오지 못했습니다.")
                 }
             } else {
                 print("로그인되지 않은 상태. 알림 예약하지 않음")

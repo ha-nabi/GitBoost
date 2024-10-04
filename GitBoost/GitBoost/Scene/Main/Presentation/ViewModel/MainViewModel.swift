@@ -26,7 +26,7 @@ final class MainViewModel: ObservableObject {
     // 메일 관련
     @Published var isShowingMailComposer = false
     @Published var mailResult: Result<MFMailComposeResult, Error>? = nil
-
+    
     // 차트에서 사용할 데이터
     @Published var githubScore: Int = 0
     @Published var totalCommitsScore: Double = 0
@@ -78,7 +78,7 @@ final class MainViewModel: ObservableObject {
                 self.errorMessage = error.localizedDescription
             }
         }
-
+        
         // GitHub 기여도 데이터 가져오기
         do {
             let contributionsData = try await loginManager.fetchContributionsData()
@@ -90,7 +90,7 @@ final class MainViewModel: ObservableObject {
                 self.errorMessage = error.localizedDescription
             }
         }
-
+        
         // 추가 GitHub 데이터 가져오기
         do {
             let additionalGitHubData = try await loginManager.fetchAdditionalGitHubData()
@@ -112,32 +112,32 @@ final class MainViewModel: ObservableObject {
             print("GitHub 데이터가 없습니다.")
             return
         }
-
+        
         // 각 항목의 데이터
         let totalCommits = additionalData.data.viewer.contributionsCollection.totalCommitContributions
         let totalStars = additionalData.data.viewer.repositories.nodes.reduce(0) { $0 + $1.stargazerCount }
         let totalPRs = additionalData.data.viewer.pullRequests.totalCount
         let contributedReposLastYear = additionalData.data.viewer.repositoriesContributedTo.totalCount
         let consecutiveCommits = calculateConsecutiveCommits(from: contributionsData)
-
+        
         // 각 항목의 점수를 계산한 후 반올림 처리
         self.totalCommitsScore = (Double(totalCommits) * 0.2).rounded()
         self.starsScore = Double(totalStars).rounded()
         self.prsScore = (Double(totalPRs) * 0.5).rounded()
         self.contributedRepoScore = Double(contributedReposLastYear).rounded()
         self.consecutiveCommitsScore = (Double(consecutiveCommits) * 0.5).rounded()
-
+        
         // 로그 출력
         print("총 커밋 수: \(totalCommits), 점수: \(totalCommitsScore)")
         print("받은 Stars 수: \(totalStars), 점수: \(starsScore)")
         print("총 PR 수: \(totalPRs), 점수: \(prsScore)")
         print("기여한 리포지토리 수 (지난 해): \(contributedReposLastYear), 점수: \(contributedRepoScore)")
         print("연속 커밋 일수: \(consecutiveCommits), 점수: \(consecutiveCommitsScore)")
-
+        
         // 최종 점수 계산
         let totalScore = totalCommitsScore + starsScore + prsScore + contributedRepoScore + consecutiveCommitsScore
         self.githubScore = Int(totalScore)
-
+        
         print("최종 GitHub 점수 (반올림): \(self.githubScore)")
     }
     
@@ -146,13 +146,13 @@ final class MainViewModel: ObservableObject {
         let contributionDays = contributionsData.data.viewer.contributionsCollection.contributionCalendar.weeks.flatMap { $0.contributionDays }
         return contributionDays.last?.contributionCount ?? 0
     }
-
+    
     // 이번 주 커밋 수
     func calculateThisWeekCommits(from contributionsData: ContributionsData) -> Int {
         let currentWeek = contributionsData.data.viewer.contributionsCollection.contributionCalendar.weeks.last
         return currentWeek?.contributionDays.reduce(0, { $0 + $1.contributionCount }) ?? 0
     }
-
+    
     // 연속된 커밋 날짜
     func calculateConsecutiveCommits(from contributionsData: ContributionsData) -> Int {
         let calendar = Calendar.current
@@ -188,55 +188,39 @@ final class MainViewModel: ObservableObject {
     }
     
     // GitHub에서 오늘 커밋이 있는지 확인
-    func checkTodaysCommits() async {
-        guard let userInfo = try? await LoginManager.shared.fetchUserInfo() else {
-            print("Error: Could not fetch user info.")
-            return
+    func checkTodaysCommits(from contributionsData: ContributionsData, in userTimeZone: TimeZone) -> Bool {
+        guard let lastWeek = contributionsData.data.viewer.contributionsCollection.contributionCalendar.weeks.last else {
+            print("기여 데이터를 찾을 수 없습니다.")
+            return false
         }
-
-        let githubUsername = userInfo.login // 로그인된 유저 이름 사용
-        print("이벤트 발생 시킬 유저 아이디: \(githubUsername)")
         
-        let url = URL(string: "https://api.github.com/users/\(githubUsername)/events")!
+        // 현재 날짜를 사용자 로컬 시간대로 가져옴
+        let currentDate = Calendar.current.date(bySettingHour: 0, minute: 0, second: 0, of: Date())
+        let formatter = DateFormatter()
+        formatter.timeZone = userTimeZone // 사용자의 로컬 시간대 설정
+        formatter.dateFormat = "yyyy-MM-dd"
         
-        do {
-            let (data, _) = try await URLSession.shared.data(from: url)
-            let events = try JSONDecoder().decode([GitHubEvent].self, from: data)
-            
-            let today = Date().formattedDate
-            
-            self.hasCommittedToday = events.contains(where: { event in
-                print("Checking event type: \(event.type) at \(event.created_at)")
-                return event.type == "PushEvent" && event.created_at.starts(with: today)
-            })
-            
-            if self.hasCommittedToday {
-                print("사용자가 오늘 커밋했습니다.")
-            } else {
-                print("사용자가 오늘 커밋을 하지 않았습니다.")
+        let todayDateString = formatter.string(from: currentDate!)
+        
+        print("오늘 날짜 (사용자 시간대 \(userTimeZone.identifier)): \(todayDateString)")
+        
+        // 마지막 주의 기여 날짜만 출력
+        for day in lastWeek.contributionDays {
+            print("기여 날짜: \(day.date), 커밋 수: \(day.contributionCount)")
+        }
+        
+        // 오늘 날짜와 일치하는 날짜에 커밋이 있는지 확인
+        let hasCommitted = lastWeek.contributionDays.contains { day in
+            let isToday = day.date == todayDateString
+            let hasCommits = day.contributionCount > 0
+            if isToday {
+                print("오늘 커밋 여부 확인: \(hasCommits)")
             }
-        } catch {
-            print("Error fetching GitHub events: \(error.localizedDescription)")
+            return isToday && hasCommits
         }
+        
+        return hasCommitted
     }
-    
-    // MARK: - GitHub에서 오늘 커밋이 있는지 확인 (테스트)
-    // 실제 테스트 시에는 API를 통해 커밋 여부를 확인합니다
-//    func checkTodaysCommits() async {
-//        let testMode = true // true일 때 강제로 커밋을 안 했다고 가정
-//        if testMode {
-//            self.hasCommittedToday = false
-//        } else {
-//            self.hasCommittedToday = true
-//        }
-//
-//        // 강제로 커밋을 안 했을 때 알림 스케줄링
-//        if !hasCommittedToday {
-//            NotificationManager.shared.scheduleCommitReminderNotification(atHour: 5, minute: 10, second: 30)
-//        } else {
-//            NotificationManager.shared.removeScheduledNotifications()
-//        }
-//    }
     
     func logout() {
         if LoginManager.shared.isLoggedIn {
@@ -274,13 +258,13 @@ final class MainViewModel: ObservableObject {
             clearUserData()
         }
     }
-
+    
     private func showAlert(title: String, message: String) {
         self.alertTitle = title
         self.alertMessage = message
         self.showAlert = true
     }
-
+    
     private func clearUserData() {
         userInfo = nil
         contributionsData = nil
@@ -294,7 +278,7 @@ final class MainViewModel: ObservableObject {
         contributedRepoScore = 0
         consecutiveCommitsScore = 0
     }
-
+    
     // 날짜 포맷터
     let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -344,13 +328,5 @@ final class MainViewModel: ObservableObject {
         )
         
         self.calculateGitHubScore()
-    }
-}
-
-extension Date {
-    var formattedDate: String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        return formatter.string(from: self)
     }
 }
