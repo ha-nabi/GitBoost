@@ -119,106 +119,12 @@ struct Home: View {
             }
             
             ToolbarItem(placement: .topBarTrailing) {
-                Menu {
-                    Menu(AppLocalized.SetNotificationsText) {
-                        Button {
-                            mainViewModel.isNotificationsEnabled = true
-                        } label: {
-                            Label {
-                                Text(AppLocalized.ActivationText)
-                            } icon: {
-                                Image(systemName: "bell.fill")
-                            }
-                        }
-                        .disabled(mainViewModel.isNotificationsEnabled)
-                        
-                        Button {
-                            mainViewModel.isNotificationsEnabled = false
-                        } label: {
-                            Label {
-                                Text(AppLocalized.DeactivationText)
-                            } icon: {
-                                Image(systemName: "bell.slash.fill")
-                            }
-                        }
-                        .disabled(!mainViewModel.isNotificationsEnabled)
-                    }
-                    
-                    Menu(AppLocalized.InformationText) {
-                        NavigationLink {
-                            WebView(url: URL(string: "https://kangciu.notion.site/GitBoost-109518c03e1e80c8b620e34b8cc13676?pvs=4")!)
-                                .navigationTitle(AppLocalized.policyText)
-                                .toolbarTitleDisplayMode(.inline)
-                        } label: {
-                            Label {
-                                Text(AppLocalized.policyText)
-                            } icon: {
-                                Image(systemName: "doc.text.fill")
-                            }
-                        }
-                        
-                        NavigationLink {
-                            WebView(url: URL(string: "https://kangciu.notion.site/GitBoost-39134425b4e8453bab23d0801a1e3415?pvs=4")!)
-                                .navigationTitle(AppLocalized.termsText)
-                                .toolbarTitleDisplayMode(.inline)
-                        } label: {
-                            Label {
-                                Text(AppLocalized.termsText)
-                            } icon: {
-                                Image(systemName: "doc.text.magnifyingglass")
-                            }
-                        }
-                    }
-                    
-                    Menu(AppLocalized.accountSettingText) {
-                        Button {
-                            mainViewModel.showLogoutDialog = true
-                        } label: {
-                            Label {
-                                Text(AppLocalized.Logout)
-                            } icon: {
-                                Image(systemName: "door.left.hand.open")
-                            }
-                            
-                        }
-                        
-                        Button {
-                            mainViewModel.showDeleteAccountDialog = true
-                        } label: {
-                            Label {
-                                Text(AppLocalized.toLeave)
-                            } icon: {
-                                Image(systemName: "trash.slash.fill")
-                            }
-                        }
-                    }
-                    
-                    Divider()
-                    
-                    Button {
-                        mainViewModel.isShowingMailComposer = true
-                    } label: {
-                        Label {
-                            Text(AppLocalized.feedbackText)
-                        } icon: {
-                            Image(systemName: "exclamationmark.bubble.fill")
-                        }
-                    }
-                    .disabled(!MFMailComposeViewController.canSendMail())
+                NavigationLink {
+                    SettingView(mainViewModel: mainViewModel)
                 } label: {
-                    Image(systemName: "ellipsis.circle.fill")
-                        .font(.subheadline)
-                        .foregroundStyle(.white)
-                        .opacity(0.9)
+                    Image(systemName: "line.3.horizontal.decrease.circle.fill")
                 }
-                .sheet(isPresented: $mainViewModel.isShowingMailComposer) {
-                    MailComposer(
-                        result: $mainViewModel.mailResult,
-                        recipientEmail: "a2849535@gmail.com",
-                        subject: AppLocalized.mailSubject,
-                        body: AppLocalized.mailBody
-                    )
-                }
+
             }
         }
     }

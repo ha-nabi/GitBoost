@@ -24,7 +24,8 @@ final class MainViewModel: ObservableObject {
     @Published var showScoreSheet = false
     
     // 메일 관련
-    @Published var isShowingMailComposer = false
+    @Published var showMailView = false
+    @Published var showMailErrorAlert = false
     @Published var mailResult: Result<MFMailComposeResult, Error>? = nil
     
     // 차트에서 사용할 데이터
@@ -232,6 +233,14 @@ final class MainViewModel: ObservableObject {
             print("더미데이터 로그아웃")
             isDummyLoggedOut = true
             showAlert(title: "로그아웃", message: "더미 계정에서 로그아웃되었습니다.")
+        }
+    }
+    
+    func mailButtonTapped() {
+        if MFMailComposeViewController.canSendMail() {
+            showMailView = true
+        } else {
+            showMailErrorAlert = true
         }
     }
     

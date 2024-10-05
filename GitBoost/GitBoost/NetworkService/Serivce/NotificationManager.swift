@@ -26,7 +26,7 @@ final class NotificationManager {
     func scheduleCommitReminderNotification(atHour hour: Int) {
         let content = UNMutableNotificationContent()
         content.title = "GitBoost"
-        content.body = AppLocalized.CommitReminderNotificationText
+        content.body = AppLocalized.commitReminderNotificationText
         content.sound = .default
         
         // 20시 알림을 위한 시간 기반 트리거

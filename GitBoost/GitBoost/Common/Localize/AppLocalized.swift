@@ -50,9 +50,16 @@ enum AppLocalized {
     static let nextText: LocalizedStringKey = "다음으로"
     
     // MARK: Notification
-    static let CommitReminderNotificationText = NSLocalizedString("오늘 커밋을 잊으신건 아닌가요?", comment: "Reminder to commit")
-    static let SetNotificationsText: LocalizedStringKey = "알림 설정"
-    static let ActivationText: LocalizedStringKey = "활성화"
-    static let DeactivationText: LocalizedStringKey = "비활성화"
+    static let commitReminderNotificationText = NSLocalizedString("오늘 커밋을 잊으신건 아닌가요?", comment: "Reminder to commit")
+    static let setNotificationsText: LocalizedStringKey = "알림 설정"
+    static let activationText: LocalizedStringKey = "활성화"
+    static let deactivationText: LocalizedStringKey = "비활성화"
+    
+    // MARK: Settings
+    static let settingText: LocalizedStringKey = "설정"
+    static let rateText: LocalizedStringKey = "평가하기"
+    static let rateSubText: LocalizedStringKey = "앱스토어에서 저희 서비스를 평가해 주세요."
+    static let feedbackSubText: LocalizedStringKey = "제안이나 질문이 있으면 이메일로 보내주세요."
+    
     
 }
