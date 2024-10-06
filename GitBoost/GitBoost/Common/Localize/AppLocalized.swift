@@ -52,6 +52,7 @@ enum AppLocalized {
     // MARK: Notification
     static let commitReminderNotificationText = NSLocalizedString("오늘 커밋을 잊으신건 아닌가요?", comment: "Reminder to commit")
     static let setNotificationsText: LocalizedStringKey = "알림 설정"
+    static let setNotificationsSubText: LocalizedStringKey = "커밋하지 않은 경우 알림을 보냅니다."
     
     // MARK: Settings
     static let settingText: LocalizedStringKey = "설정"

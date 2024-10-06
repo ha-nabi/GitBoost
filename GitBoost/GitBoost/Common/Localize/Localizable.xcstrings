@@ -396,6 +396,16 @@
         }
       }
     },
+    "커밋하지 않은 경우 알림을 보냅니다." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Get notified when you haven't committed."
+          }
+        }
+      }
+    },
     "탈퇴하기" : {
       "localizations" : {
         "en" : {

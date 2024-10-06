@@ -21,13 +21,22 @@ struct SettingView: View {
                     Section("Notification") {
                         HStack {
                             Label {
-                                Text(AppLocalized.setNotificationsText)
-                                    .lineLimit(1)
-                                    .minimumScaleFactor(0.7)
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(AppLocalized.setNotificationsText)
+                                        .font(.callout)
+                                        .lineLimit(1)
+                                        .minimumScaleFactor(0.7)
                                     
+                                    Text(AppLocalized.setNotificationsSubText)
+                                        .font(.caption)
+                                        .foregroundStyle(.gray)
+                                        .lineLimit(1)
+                                        .fixedSize()
+                                }
                             } icon: {
                                 Image(systemName: "bell.fill")
                                     .foregroundStyle(.white)
+                                    .font(.title3)
                             }
                             
                             Spacer()
