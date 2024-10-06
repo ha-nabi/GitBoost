@@ -255,16 +255,6 @@
     "메일 전송 불가" : {
 
     },
-    "비활성화" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Deactivation"
-          }
-        }
-      }
-    },
     "설정" : {
       "localizations" : {
         "en" : {
@@ -485,16 +475,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Analyze your activity to provide\npersonalized score."
-          }
-        }
-      }
-    },
-    "활성화" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Activation"
           }
         }
       }

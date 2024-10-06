@@ -22,6 +22,7 @@ final class MainViewModel: ObservableObject {
     @Published var showLogoutDialog = false
     @Published var showDeleteAccountDialog = false
     @Published var showScoreSheet = false
+    @Published var isNavigatingToSettings = false
     
     // 메일 관련
     @Published var showMailView = false
@@ -225,14 +226,34 @@ final class MainViewModel: ObservableObject {
     
     func logout() {
         if LoginManager.shared.isLoggedIn {
-            print("GitHub 로그아웃")
+            print("계정 로그아웃")
             loginManager.logout()
             isLoggedIn = false
-            showAlert(title: "로그아웃", message: "성공적으로 로그아웃되었습니다.")
         } else {
             print("더미데이터 로그아웃")
             isDummyLoggedOut = true
-            showAlert(title: "로그아웃", message: "더미 계정에서 로그아웃되었습니다.")
+        }
+    }
+    
+    func deleteAccount() {
+        if LoginManager.shared.isLoggedIn {
+            print("계정 탈퇴")
+            Task {
+                do {
+                    try await loginManager.deleteAccount()
+                    DispatchQueue.main.async {
+                        self.isLoggedIn = false
+                        self.clearUserData()
+                    }
+                } catch {
+                    DispatchQueue.main.async {
+                    }
+                }
+            }
+        } else {
+            print("더미데이터 탈퇴")
+            isDummyDeleted = true
+            clearUserData()
         }
     }
     
@@ -242,36 +263,6 @@ final class MainViewModel: ObservableObject {
         } else {
             showMailErrorAlert = true
         }
-    }
-    
-    func deleteAccount() {
-        if LoginManager.shared.isLoggedIn {
-            Task {
-                do {
-                    try await loginManager.deleteAccount()
-                    DispatchQueue.main.async {
-                        self.isLoggedIn = false
-                        self.showAlert(title: "계정 삭제 완료", message: "GitHub 계정이 성공적으로 삭제되었습니다.")
-                        self.clearUserData()
-                    }
-                } catch {
-                    DispatchQueue.main.async {
-                        self.showAlert(title: "계정 삭제 실패", message: "계정 삭제 중 오류가 발생했습니다: \(error.localizedDescription)")
-                    }
-                }
-            }
-        } else {
-            print("더미데이터 탈퇴")
-            isDummyDeleted = true
-            showAlert(title: "더미 계정 삭제", message: "더미 계정이 성공적으로 삭제되었습니다.")
-            clearUserData()
-        }
-    }
-    
-    private func showAlert(title: String, message: String) {
-        self.alertTitle = title
-        self.alertMessage = message
-        self.showAlert = true
     }
     
     private func clearUserData() {

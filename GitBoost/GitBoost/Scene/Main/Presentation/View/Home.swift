@@ -119,12 +119,16 @@ struct Home: View {
             }
             
             ToolbarItem(placement: .topBarTrailing) {
-                NavigationLink {
-                    SettingView(mainViewModel: mainViewModel)
+                Button {
+                    mainViewModel.isNavigatingToSettings = true
                 } label: {
                     Image(systemName: "line.3.horizontal.decrease.circle.fill")
+                        .opacity(0.9)
                 }
-
+                .sheet(isPresented: $mainViewModel.isNavigatingToSettings, content: {
+                    SettingView(mainViewModel: mainViewModel)
+                })
+                .presentationBackground(.thinMaterial)
             }
         }
     }
