@@ -30,6 +30,7 @@
 		637ED04E2CADD8DC00653161 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637ED04D2CADD8DC00653161 /* NotificationManager.swift */; };
 		637ED0502CADD93700653161 /* GitHubEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637ED04F2CADD93700653161 /* GitHubEvent.swift */; };
 		637ED0522CADD95200653161 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637ED0512CADD95200653161 /* AppDelegate.swift */; };
+		637ED0612CB1E2FE00653161 /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637ED0602CB1E2FE00653161 /* SettingView.swift */; };
 		6383BE9E2C9CF81900EDE461 /* Contribution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6383BE9D2C9CF81900EDE461 /* Contribution.swift */; };
 		6383BEA12C9CF85800EDE461 /* GrassView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6383BEA02C9CF85800EDE461 /* GrassView.swift */; };
 		6383BEA42C9D9C1A00EDE461 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 6383BEA32C9D9C1A00EDE461 /* KeychainAccess */; };
@@ -71,6 +72,7 @@
 		637ED04D2CADD8DC00653161 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		637ED04F2CADD93700653161 /* GitHubEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubEvent.swift; sourceTree = "<group>"; };
 		637ED0512CADD95200653161 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		637ED0602CB1E2FE00653161 /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
 		6383BE9D2C9CF81900EDE461 /* Contribution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Contribution.swift; sourceTree = "<group>"; };
 		6383BEA02C9CF85800EDE461 /* GrassView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrassView.swift; sourceTree = "<group>"; };
 		63DF98B52C9F492500B1CCE2 /* GlassViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassViewModel.swift; sourceTree = "<group>"; };
@@ -270,6 +272,7 @@
 			children = (
 				635922872C9CEF710006BB11 /* Main */,
 				635922AA2C9CF7740006BB11 /* Grass */,
+				637ED05E2CB1E2DC00653161 /* Setting */,
 				635922912C9CEF710006BB11 /* Onboarding */,
 			);
 			path = Scene;
@@ -307,6 +310,22 @@
 				637ED04F2CADD93700653161 /* GitHubEvent.swift */,
 			);
 			path = Entities;
+			sourceTree = "<group>";
+		};
+		637ED05E2CB1E2DC00653161 /* Setting */ = {
+			isa = PBXGroup;
+			children = (
+				637ED05F2CB1E2E800653161 /* Presentation */,
+			);
+			path = Setting;
+			sourceTree = "<group>";
+		};
+		637ED05F2CB1E2E800653161 /* Presentation */ = {
+			isa = PBXGroup;
+			children = (
+				637ED0602CB1E2FE00653161 /* SettingView.swift */,
+			);
+			path = Presentation;
 			sourceTree = "<group>";
 		};
 		6383BE9B2C9CF7FA00EDE461 /* Presentation */ = {
@@ -461,6 +480,7 @@
 				635922992C9CEF710006BB11 /* CircularProgressView.swift in Sources */,
 				6359229A2C9CEF710006BB11 /* Keys.swift in Sources */,
 				6359229B2C9CEF710006BB11 /* LoginManager.swift in Sources */,
+				637ED0612CB1E2FE00653161 /* SettingView.swift in Sources */,
 				637ED0502CADD93700653161 /* GitHubEvent.swift in Sources */,
 				63DF98B92C9F498300B1CCE2 /* IntroView.swift in Sources */,
 				633DA17E2CA238F700654981 /* AppLocalized.swift in Sources */,
@@ -623,7 +643,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_ASSET_PATHS = "\"GitBoost/Resources/Preview Content\"";
 				DEVELOPMENT_TEAM = ND6356Y385;
 				ENABLE_PREVIEWS = YES;
@@ -640,7 +660,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.4;
+				MARKETING_VERSION = 1.0.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ciu.GitBoost;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -660,7 +680,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_ASSET_PATHS = "\"GitBoost/Resources/Preview Content\"";
 				DEVELOPMENT_TEAM = ND6356Y385;
 				ENABLE_PREVIEWS = YES;
@@ -677,7 +697,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.4;
+				MARKETING_VERSION = 1.0.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ciu.GitBoost;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

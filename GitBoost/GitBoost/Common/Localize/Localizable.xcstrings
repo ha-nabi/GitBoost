@@ -19,6 +19,9 @@
     "%lld " : {
 
     },
+    "Account" : {
+
+    },
     "Activity Score" : {
 
     },
@@ -60,7 +63,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Getting Started with GitBoost"
+            "value" : "Getting started with GitBoost"
           }
         }
       }
@@ -80,10 +83,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Please leave feedback on GitBoost.\n"
+            "value" : "Leave your feedback on GitBoost."
           }
         }
       }
+    },
+    "GitHub" : {
+
     },
     "GitHub 연동하기" : {
       "localizations" : {
@@ -95,13 +101,25 @@
         }
       }
     },
+    "Information" : {
+
+    },
+    "Instagram" : {
+
+    },
     "Less" : {
+
+    },
+    "Links" : {
 
     },
     "Loading contributions..." : {
 
     },
     "More" : {
+
+    },
+    "Notification" : {
 
     },
     "Please enter the code you received from the App Store review." : {
@@ -135,6 +153,9 @@
     "Submit" : {
 
     },
+    "Support" : {
+
+    },
     "Type" : {
 
     },
@@ -143,7 +164,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Easy to check records"
+            "value" : "Easily check your history"
           }
         }
       }
@@ -153,7 +174,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "a policy of handling personal information"
+            "value" : "Privacy policy"
           }
         }
       }
@@ -223,17 +244,23 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Log in and take advantage of more features."
+            "value" : "Sign in to access more features."
           }
         }
       }
     },
-    "비활성화" : {
+    "메일 계정이 설정되어 있지 않거나, 메일 전송이 불가능한 상태입니다." : {
+
+    },
+    "메일 전송 불가" : {
+
+    },
+    "설정" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Deactivation"
+            "value" : "Settings"
           }
         }
       }
@@ -253,7 +280,17 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Notifications"
+            "value" : "Notification settings"
+          }
+        }
+      }
+    },
+    "앱스토어에서 저희 서비스를 평가해 주세요." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please rate our service on the App Store."
           }
         }
       }
@@ -294,7 +331,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Didn't you forget to commit today?"
+            "value" : "Did you forget to commit today?"
           }
         }
       }
@@ -304,7 +341,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Today, this week, and\nProvides continuous commit history."
+            "value" : "Today, this week, and\nconsecutive commits."
           }
         }
       }
@@ -324,7 +361,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Terms and Conditions"
+            "value" : "Terms and conditions"
           }
         }
       }
@@ -339,6 +376,16 @@
         }
       }
     },
+    "제안이나 질문이 있으면 이메일로 보내주세요." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Email any suggestions or questions."
+          }
+        }
+      }
+    },
     "총 커밋 점수" : {
       "localizations" : {
         "en" : {
@@ -349,12 +396,32 @@
         }
       }
     },
+    "커밋하지 않은 경우 알림을 보냅니다." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Get notified when you haven't committed."
+          }
+        }
+      }
+    },
     "탈퇴하기" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "To leave"
+          }
+        }
+      }
+    },
+    "평가하기" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rate Our App"
           }
         }
       }
@@ -374,7 +441,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Do you want to log out of your current account?"
+            "value" : "Are you sure you want to sign out of your current account?"
           }
         }
       }
@@ -384,10 +451,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Would you like to withdraw from your current account?"
+            "value" : "Do you want to leave your current account?"
           }
         }
       }
+    },
+    "확인" : {
+
     },
     "활동 점수 결과" : {
       "localizations" : {
@@ -414,17 +484,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "by analyzing the activities of\nIt provides my own score."
-          }
-        }
-      }
-    },
-    "활성화" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Activation"
+            "value" : "Analyze your activity to provide\npersonalized score."
           }
         }
       }

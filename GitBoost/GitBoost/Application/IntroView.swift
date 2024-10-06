@@ -16,7 +16,7 @@ struct IntroView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                if LoginManager.shared.isLoggedIn {
+                if loginManager.isLoggedIn {
                     ContentView()
                 } else {
                     VStack {
